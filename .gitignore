@@ -3,7 +3,3 @@
 *.iws
 *.iml
 *.ipr
-
-### Build Targets ###
-target/
-built/
