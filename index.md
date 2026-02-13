@@ -18,6 +18,7 @@
 - [SCX IO](./scx-io/index.md)
 - [SCX JDBC](./scx-jdbc/index.md)
 - [SCX JDBC Spy](./scx-jdbc-spy/index.md)
+- [SCX JDBC MySQL](./scx-jdbc-mysql/index.md)
 - [SCX Lock](./scx-lock/index.md)
 - [SCX Logging](./scx-logging/index.md)
 - [SCX Node](./scx-node/index.md)
