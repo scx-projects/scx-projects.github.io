@@ -16,6 +16,7 @@
 - [SCX Function](./scx-function/index.md)
 - [SCX HTTP](./scx-http/index.md)
 - [SCX HTTP Routing](./scx-http-routing/index.md)
+- [SCX HTTP Routing X](./scx-http-routing-x/index.md)
 - [SCX HTTP X](./scx-http-x/index.md)
 - [SCX IO](./scx-io/index.md)
 - [SCX JDBC](./scx-jdbc/index.md)
