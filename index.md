@@ -26,6 +26,7 @@
 - [SCX Logging](./scx-logging/index.md)
 - [SCX Node](./scx-node/index.md)
 - [SCX Object](./scx-object/index.md)
+- [SCX Object X](./scx-object-x/index.md)
 - [SCX Parent](./scx-parent/index.md)
 - [SCX Random](./scx-random/index.md)
 - [SCX Reflect](./scx-reflect/index.md)
