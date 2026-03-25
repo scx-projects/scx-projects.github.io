@@ -3,7 +3,6 @@
 - [SCX ANSI](./scx-ansi/index.md)
 - [SCX Array](./scx-array/index.md)
 - [SCX Collection](./scx-collection/index.md)
-- [SCX Constant](./scx-constant/index.md)
 - [SCX Data](./scx-data/index.md)
 - [SCX Data JDBC](./scx-data-jdbc/index.md)
 - [SCX DI](./scx-di/index.md)
