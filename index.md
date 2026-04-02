@@ -18,7 +18,7 @@
 - [SCX HTTP Routing X](./scx-http-routing-x/index.md)
 - [SCX HTTP X](./scx-http-x/index.md)
 - [SCX IO](./scx-io/index.md)
-- [SCX JDBC](./scx-jdbc/index.md)
+- [SCX JDBC](scx-sql/index.md)
 - [SCX JDBC Spy](./scx-jdbc-spy/index.md)
 - [SCX JDBC MySQL](./scx-jdbc-mysql/index.md)
 - [SCX Lock](./scx-lock/index.md)
