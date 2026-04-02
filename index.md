@@ -4,7 +4,7 @@
 - [SCX Array](./scx-array/index.md)
 - [SCX Collection](./scx-collection/index.md)
 - [SCX Data](./scx-data/index.md)
-- [SCX Data JDBC](./scx-data-jdbc/index.md)
+- [SCX Data JDBC](scx-data-sql/index.md)
 - [SCX DI](./scx-di/index.md)
 - [SCX Digest](./scx-digest/index.md)
 - [SCX Exception](./scx-exception/index.md)
