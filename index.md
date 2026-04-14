@@ -34,6 +34,7 @@
 - [SCX String](./scx-string/index.md)
 - [SCX TCP](./scx-tcp/index.md)
 - [SCX Timer](./scx-timer/index.md)
+- [SCX Transaction](./scx-transaction/index.md)
 - [SCX Web](./scx-web/index.md)
 - [SCX WebSocket](./scx-websocket/index.md)
 - [SCX WebSocket X](./scx-websocket-x/index.md)
