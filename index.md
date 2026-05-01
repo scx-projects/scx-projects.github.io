@@ -1,6 +1,7 @@
 # SCX Projects
 
 - [SCX ANSI](./scx-ansi/index.md)
+- [SCX App](./scx-app/index.md)
 - [SCX Array](./scx-array/index.md)
 - [SCX Collection](./scx-collection/index.md)
 - [SCX Data](./scx-data/index.md)
