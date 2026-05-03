@@ -6,7 +6,7 @@ SCX Reflect 是一个轻量的 Java 反射信息抽象库。
 
 SCX Reflect 的重点不是替代 Java 反射，而是让上层库更方便地处理：
 
-```text id="7i5mtm"
+```text
 泛型类型解析
 字段 / 方法 / 构造函数信息读取
 record component 信息读取
@@ -23,7 +23,7 @@ TypeReference 泛型捕获
 
 ### Maven
 
-```xml id="9x52oe"
+```xml
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-reflect</artifactId>
@@ -35,7 +35,7 @@ TypeReference 泛型捕获
 
 SCX Reflect 中最常用的概念包括：
 
-```text id="882ns0"
+```text
 ScxReflect              入口工具类
 TypeReference           泛型类型捕获工具
 TypeInfo                类型信息总接口
@@ -58,7 +58,7 @@ ClassKind               类类型
 
 ### 获取普通类型信息
 
-```java id="i6wocq"
+```java
 import dev.scx.reflect.ClassInfo;
 import dev.scx.reflect.ScxReflect;
 
@@ -71,7 +71,7 @@ System.out.println(type.accessModifier());
 
 ### 获取字段信息
 
-```java id="03xiil"
+```java
 for (var field : type.fields()) {
     System.out.println(field.name() + " : " + field.fieldType());
 }
@@ -79,7 +79,7 @@ for (var field : type.fields()) {
 
 ### 获取方法信息
 
-```java id="dhjqfm"
+```java
 for (var method : type.methods()) {
     System.out.println(method.name() + " -> " + method.returnType());
 }
@@ -87,7 +87,7 @@ for (var method : type.methods()) {
 
 ### 获取泛型类型信息
 
-```java id="r1ywo1"
+```java
 import dev.scx.reflect.ClassInfo;
 import dev.scx.reflect.ScxReflect;
 import dev.scx.reflect.TypeReference;
@@ -108,7 +108,7 @@ System.out.println(type.bindings().get(0)); // String
 
 `ScxReflect` 是最常用的入口类。
 
-```java id="2x1qrr"
+```java
 TypeInfo type1 = ScxReflect.typeOf(String.class);
 
 TypeInfo type2 = ScxReflect.typeOf(
@@ -120,7 +120,7 @@ TypeInfo type3 = ScxReflect.typeOf(someJavaReflectType);
 
 它提供三个静态方法：
 
-```java id="9k2gb8"
+```java
 typeOf(Class clazz)
 
 typeOf(Type type)
@@ -134,7 +134,7 @@ typeOf(TypeReference typeReference)
 
 `TypeReference` 用于捕获泛型类型。
 
-```java id="o0o5z9"
+```java
 TypeInfo type = ScxReflect.typeOf(
     new TypeReference<Map<String, List<Integer>>>() {}
 );
@@ -142,7 +142,7 @@ TypeInfo type = ScxReflect.typeOf(
 
 不要这样写：
 
-```java id="eolsyj"
+```java
 new TypeReference() {};
 ```
 
@@ -150,7 +150,7 @@ new TypeReference() {};
 
 常见用法：
 
-```java id="a5hx6u"
+```java
 TypeInfo listString = ScxReflect.typeOf(
     new TypeReference<List<String>>() {}
 );
@@ -170,7 +170,7 @@ TypeInfo arrayType = ScxReflect.typeOf(
 
 `TypeInfo` 是所有类型信息的公共接口。
 
-```java id="3dk6ub"
+```java
 Class rawClass();
 
 boolean isRaw();
@@ -180,7 +180,7 @@ boolean isRaw();
 
 示例：
 
-```java id="xtzvfz"
+```java
 TypeInfo type = ScxReflect.typeOf(String.class);
 
 System.out.println(type.rawClass()); // class java.lang.String
@@ -189,7 +189,7 @@ System.out.println(type.isRaw());    // true
 
 对于 `List<String>`：
 
-```java id="21icqo"
+```java
 ClassInfo type = (ClassInfo) ScxReflect.typeOf(
     new TypeReference<List<String>>() {}
 );
@@ -202,13 +202,13 @@ System.out.println(type.isRaw());    // false
 
 `ClassInfo` 表示普通 class、interface、enum、annotation 或 record。
 
-```java id="l6o9gn"
+```java
 ClassInfo type = (ClassInfo) ScxReflect.typeOf(User.class);
 ```
 
 它提供：
 
-```java id="5wrvh4"
+```java
 TypeBindings bindings();
 
 ClassInfo declaringClass();
@@ -246,7 +246,7 @@ RecordComponentInfo[] recordComponents();
 
 ### 判断类类型
 
-```java id="2mkz3j"
+```java
 ClassInfo type = (ClassInfo) ScxReflect.typeOf(User.class);
 
 if (type.classKind() == ClassKind.RECORD) {
@@ -256,7 +256,7 @@ if (type.classKind() == ClassKind.RECORD) {
 
 `ClassKind` 包括：
 
-```text id="8smdwj"
+```text
 CLASS
 INTERFACE
 ENUM
@@ -268,13 +268,13 @@ RECORD
 
 ### 访问修饰符
 
-```java id="6o7okm"
+```java
 System.out.println(type.accessModifier());
 ```
 
 `AccessModifier` 包括：
 
-```text id="dj5eqt"
+```text
 PUBLIC
 PRIVATE
 PROTECTED
@@ -287,7 +287,7 @@ PACKAGE_PRIVATE
 
 ### 获取当前类声明的字段
 
-```java id="5pqvvy"
+```java
 ClassInfo type = (ClassInfo) ScxReflect.typeOf(User.class);
 
 for (FieldInfo field : type.fields()) {
@@ -300,7 +300,7 @@ for (FieldInfo field : type.fields()) {
 
 ### 获取继承体系中的所有字段
 
-```java id="mwjswh"
+```java
 for (FieldInfo field : type.allFields()) {
     System.out.println(field.declaringClass() + "." + field.name());
 }
@@ -310,7 +310,7 @@ for (FieldInfo field : type.allFields()) {
 
 ### 读取和设置字段值
 
-```java id="thor59"
+```java
 FieldInfo field = type.fields()[0];
 
 field.setAccessible(true);
@@ -324,7 +324,7 @@ field.set(user, "new value");
 
 ### 字段属性
 
-```java id="85shia"
+```java
 System.out.println(field.name());
 System.out.println(field.accessModifier());
 System.out.println(field.isStatic());
@@ -336,7 +336,7 @@ System.out.println(field.fieldType());
 
 例如：
 
-```java id="pofmqh"
+```java
 class Box<T> {
     T value;
 }
@@ -354,7 +354,7 @@ System.out.println(valueField.fieldType()); // String
 
 ### 获取当前类声明的方法
 
-```java id="laqkik"
+```java
 for (MethodInfo method : type.methods()) {
     System.out.println(method.name() + " -> " + method.returnType());
 }
@@ -364,7 +364,7 @@ for (MethodInfo method : type.methods()) {
 
 ### 获取继承体系中的所有方法
 
-```java id="x4hgpw"
+```java
 for (MethodInfo method : type.allMethods()) {
     System.out.println(method.signature());
 }
@@ -374,7 +374,7 @@ for (MethodInfo method : type.allMethods()) {
 
 ### 方法属性
 
-```java id="mxydj9"
+```java
 System.out.println(method.name());
 System.out.println(method.accessModifier());
 System.out.println(method.isStatic());
@@ -390,7 +390,7 @@ System.out.println(method.signature());
 
 ### 调用方法
 
-```java id="u9d7fq"
+```java
 method.setAccessible(true);
 
 Object result = method.invoke(user, arg1, arg2);
@@ -402,7 +402,7 @@ Object result = method.invoke(user, arg1, arg2);
 
 `MethodSignature` 由方法名和参数类型组成。
 
-```java id="295yza"
+```java
 MethodSignature signature = method.signature();
 
 System.out.println(signature.name());
@@ -413,13 +413,13 @@ System.out.println(Arrays.toString(signature.parameterTypes()));
 
 ### 查找直接父方法
 
-```java id="ntg3ea"
+```java
 MethodInfo[] superMethods = method.superMethods();
 ```
 
 ### 查找所有父方法
 
-```java id="1kptlx"
+```java
 MethodInfo[] allSuperMethods = method.allSuperMethods();
 ```
 
@@ -429,7 +429,7 @@ MethodInfo[] allSuperMethods = method.allSuperMethods();
 
 SCX Reflect 的重写判断规则包括：
 
-```text id="vfhfib"
+```text
 static 方法不参与重写
 final 方法不能被重写
 private 方法不能被重写
@@ -443,7 +443,7 @@ package-private 方法只有同包才可重写
 
 ### 获取构造函数
 
-```java id="5h8ugb"
+```java
 for (ConstructorInfo constructor : type.constructors()) {
     System.out.println(constructor);
 }
@@ -453,7 +453,7 @@ for (ConstructorInfo constructor : type.constructors()) {
 
 ### 查找无参构造函数
 
-```java id="qxxr0z"
+```java
 ConstructorInfo constructor = type.defaultConstructor();
 
 if (constructor != null) {
@@ -465,7 +465,7 @@ if (constructor != null) {
 
 ### 创建实例
 
-```java id="7bmbkd"
+```java
 constructor.setAccessible(true);
 
 Object obj = constructor.newInstance(arg1, arg2);
@@ -477,7 +477,7 @@ Object obj = constructor.newInstance(arg1, arg2);
 
 `ParameterInfo` 表示方法参数或构造函数参数。
 
-```java id="sg3l60"
+```java
 for (ParameterInfo parameter : method.parameters()) {
     System.out.println(parameter.name());
     System.out.println(parameter.parameterType());
@@ -486,7 +486,7 @@ for (ParameterInfo parameter : method.parameters()) {
 
 `ParameterInfo` 提供：
 
-```java id="j4vjgo"
+```java
 Parameter rawParameter();
 
 ExecutableInfo declaringExecutable();
@@ -502,7 +502,7 @@ TypeInfo parameterType();
 
 对于 record，可以读取 record component 信息。
 
-```java id="ll09og"
+```java
 record UserDTO(String name, Integer age) {
 }
 
@@ -518,7 +518,7 @@ for (RecordComponentInfo component : type.recordComponents()) {
 
 ### 查找 record 规范构造函数
 
-```java id="vjpz3e"
+```java
 ConstructorInfo constructor = type.recordConstructor();
 ```
 
@@ -528,7 +528,7 @@ ConstructorInfo constructor = type.recordConstructor();
 
 `TypeBindings` 表示类型变量到实际类型的绑定关系。
 
-```java id="pmk7vi"
+```java
 class Pair<A, B> {
 }
 
@@ -551,7 +551,7 @@ System.out.println(bindings.get("B"));   // Integer
 
 `bindings()` 只表示当前类自己的类型参数绑定；`allBindings()` 会把非静态成员类的外部类泛型绑定也合并进来。
 
-```java id="qlic44"
+```java
 class Outer<T> {
     class Inner<U> {
     }
@@ -575,7 +575,7 @@ System.out.println(bindings.get(1));   // Integer
 
 数组类型会被表示为 `ArrayTypeInfo`。
 
-```java id="n710iw"
+```java
 ArrayTypeInfo type = (ArrayTypeInfo) ScxReflect.typeOf(String[].class);
 
 System.out.println(type.componentType()); // String
@@ -584,7 +584,7 @@ System.out.println(type.rawClass());      // class [Ljava.lang.String;
 
 `ArrayTypeInfo` 提供：
 
-```java id="dyz14s"
+```java
 TypeInfo componentType();
 
 Object newArray(int length);
@@ -594,7 +594,7 @@ Object newArray(int length);
 
 示例：
 
-```java id="vmggl1"
+```java
 ArrayTypeInfo stringArray = (ArrayTypeInfo) ScxReflect.typeOf(String[].class);
 
 Object array = stringArray.newArray(3);
@@ -606,7 +606,7 @@ System.out.println(array.getClass()); // class [Ljava.lang.String;
 
 基本类型会被表示为 `PrimitiveTypeInfo`。
 
-```java id="hxkxwi"
+```java
 PrimitiveTypeInfo intType = (PrimitiveTypeInfo) ScxReflect.typeOf(int.class);
 
 System.out.println(intType.rawClass()); // int
@@ -615,7 +615,7 @@ System.out.println(intType.isRaw());    // true
 
 `int` 和 `Integer` 是不同类型，测试代码中也验证了 primitive 和 wrapper 不相等。([GitHub][22])
 
-```java id="iomlbj"
+```java
 TypeInfo p = ScxReflect.typeOf(int.class);
 TypeInfo w = ScxReflect.typeOf(Integer.class);
 
@@ -626,7 +626,7 @@ System.out.println(p.equals(w)); // false
 
 `ClassInfo`、`FieldInfo`、`MethodInfo`、`ConstructorInfo`、`ParameterInfo` 和 `RecordComponentInfo` 都可以读取注解。
 
-```java id="rfnv67"
+```java
 MyAnno anno = field.findAnnotation(MyAnno.class);
 
 MyAnno[] annotations = field.findAnnotations(MyAnno.class);
@@ -636,7 +636,7 @@ Annotation[] all = field.annotations();
 
 `AnnotatedElementInfo` 提供：
 
-```java id="7k2nhu"
+```java
 Annotation[] annotations();
 
 <T extends Annotation> T findAnnotation(Class<T> annotationClass);
@@ -650,7 +650,7 @@ Annotation[] annotations();
 
 可以通过 `findSuperType(...)` 在当前类型继承体系中查找某个 raw type 对应的 `ClassInfo`。
 
-```java id="1smu5r"
+```java
 interface Base<T> {
 }
 
@@ -670,7 +670,7 @@ System.out.println(base.bindings().get(0)); // String
 
 SCX Reflect 的 `TypeFactory` 是线程安全的，并且语义上等价的类型会映射到同一个 `TypeInfo` 实例。源码注释中明确写了这两个设计目标。([GitHub][24])
 
-```java id="wxulmv"
+```java
 TypeInfo a = ScxReflect.typeOf(String.class);
 TypeInfo b = ScxReflect.typeOf(new TypeReference<String>() {});
 
@@ -685,7 +685,7 @@ SCX Reflect 不把 `TypeVariable` 和 `WildcardType` 作为最终模型保留下
 
 处理规则是：
 
-```text id="nz1f4d"
+```text
 TypeVariable:
 优先从当前 TypeBindings 中查找实际绑定；
 如果找不到，退化为第一个上界。
@@ -698,7 +698,7 @@ WildcardType:
 
 示例：
 
-```java id="5pet0j"
+```java
 class Box<T extends Number> {
     T value;
 }
@@ -712,7 +712,7 @@ System.out.println(value.fieldType()); // Number
 
 如果使用参数化类型：
 
-```java id="tt419n"
+```java
 ClassInfo stringBox = (ClassInfo) ScxReflect.typeOf(
     new TypeReference<Box<Integer>>() {}
 );
@@ -726,7 +726,7 @@ System.out.println(value.fieldType()); // Integer
 
 对于递归泛型引用，SCX Reflect 会退化为原始类型，避免 `toString()`、`hashCode()`、`equals()` 或类型解析时无限递归。
 
-```java id="pvcb5r"
+```java
 class Node<T extends Node<T>> {
 }
 ```
@@ -737,7 +737,7 @@ class Node<T extends Node<T>> {
 
 ## 完整示例
 
-```java id="8q8ggq"
+```java
 import dev.scx.reflect.*;
 
 import java.util.List;
@@ -857,7 +857,7 @@ SCX Reflect 是 Java 原生反射之上的抽象层。它不会替代 `Class`、
 
 使用 `TypeReference`：
 
-```java id="5jmkkt"
+```java
 ClassInfo type = (ClassInfo) ScxReflect.typeOf(
     new TypeReference<List<String>>() {}
 );
@@ -881,7 +881,7 @@ SCX Reflect 会过滤 bridge method 和 synthetic method，让上层库看到更
 
 使用 `recordConstructor()`：
 
-```java id="c4qyl3"
+```java
 ConstructorInfo constructor = type.recordConstructor();
 ```
 

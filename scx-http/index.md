@@ -8,7 +8,7 @@ SCX HTTP 是一个轻量的 HTTP 抽象库。
 
 ### Maven
 
-```xml id="p5o1ef"
+```xml
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-http</artifactId>
@@ -20,7 +20,7 @@ SCX HTTP 是一个轻量的 HTTP 抽象库。
 
 SCX HTTP 中最常用的概念包括：
 
-```text id="0fvlv6"
+```text
 ScxHttpClient             HTTP 客户端抽象
 ScxHttpClientRequest      HTTP 客户端请求构建器
 ScxHttpClientResponse     HTTP 客户端响应
@@ -46,7 +46,7 @@ Parameters                多值参数集合
 
 `ScxHttpClient` 只定义一个能力：创建请求。
 
-```java id="l0j1yq"
+```java
 ScxHttpClientRequest request(HttpVersion... httpVersions);
 ```
 
@@ -54,7 +54,7 @@ ScxHttpClientRequest request(HttpVersion... httpVersions);
 
 示例：
 
-```java id="m3g6ja"
+```java
 ScxHttpClient client = ...;
 
 ScxHttpClientResponse response = client
@@ -72,7 +72,7 @@ String body = response.asString();
 
 `ScxHttpServer` 定义服务端最小能力：
 
-```java id="lcn76r"
+```java
 ScxHttpServer onRequest(Function1Void<ScxHttpServerRequest> requestHandler);
 
 ScxHttpServer onError(ScxHttpServerErrorHandler errorHandler);
@@ -90,7 +90,7 @@ default void start(int port) throws IOException;
 
 示例：
 
-```java id="ggl2za"
+```java
 ScxHttpServer server = ...;
 
 server.onRequest(request -> {
@@ -106,7 +106,7 @@ server.start(8080);
 
 `ScxHttpServerRequest` 表示服务端已经接收到的请求。
 
-```java id="g6nzcc"
+```java
 ScxHttpServerResponse response();
 
 ScxHttpMethod method();
@@ -130,7 +130,7 @@ String getQuery(String name);
 
 示例：
 
-```java id="msx0sn"
+```java
 server.onRequest(request -> {
     System.out.println(request.method());
     System.out.println(request.path());
@@ -147,7 +147,7 @@ server.onRequest(request -> {
 
 `ScxHttpServerResponse` 表示服务端响应发送器。
 
-```java id="tktfq0"
+```java
 ScxHttpServerRequest request();
 
 ScxHttpStatusCode statusCode();
@@ -161,7 +161,7 @@ default ScxHttpServerResponse statusCode(int statusCode);
 
 示例：
 
-```java id="m4njmb"
+```java
 request.response()
     .statusCode(200)
     .contentType(MediaType.TEXT_PLAIN)
@@ -172,7 +172,7 @@ request.response()
 
 `ScxHttpMediaSender` 提供一组便捷 `send(...)` 方法：
 
-```java id="k24qz6"
+```java
 send();
 
 send(ByteInput byteInput);
@@ -200,7 +200,7 @@ sendEventStream();
 
 示例：
 
-```java id="zhhb27"
+```java
 request.response().send("hello");
 
 request.response().send(new byte[]{1, 2, 3});
@@ -210,7 +210,7 @@ request.response().send(new File("demo.txt"));
 
 ### Gzip 发送
 
-```java id="krgc3x"
+```java
 request.response()
     .gzip()
     .send("compressed response");
@@ -222,7 +222,7 @@ request.response()
 
 `ScxHttpMediaReceived` 提供一组便捷 `as...` 方法：
 
-```java id="dmem0n"
+```java
 as(MediaReader<T, X> mediaReader);
 
 asBytes();
@@ -244,7 +244,7 @@ asEventStream();
 
 示例：
 
-```java id="5ed2o8"
+```java
 String body = request.asString();
 
 byte[] bytes = request.asBytes();
@@ -254,7 +254,7 @@ FormParams form = request.asFormParams();
 
 ### 自动解码
 
-```java id="u7m83a"
+```java
 String body = request.autoDecode().asString();
 ```
 
@@ -262,7 +262,7 @@ String body = request.autoDecode().asString();
 
 ### 缓存 body
 
-```java id="lwazid"
+```java
 var cached = request.cache();
 
 String a = cached.asString();
@@ -275,7 +275,7 @@ String b = cached.asString();
 
 ### 创建 Header
 
-```java id="eflvzu"
+```java
 ScxHttpHeadersWritable headers = ScxHttpHeaders.of();
 
 headers
@@ -288,7 +288,7 @@ headers
 
 ### 读取 Header
 
-```java id="brvkc3"
+```java
 String token = request.getHeader("X-Token");
 
 ScxMediaType contentType = request.contentType();
@@ -304,7 +304,7 @@ Accept accept = request.accept();
 
 ### 写入 Header
 
-```java id="u935b3"
+```java
 response
     .setHeader("X-Server", "scx")
     .contentType(MediaType.TEXT_HTML)
@@ -315,7 +315,7 @@ response
 
 ### 从字符串解析 Header
 
-```java id="f154fj"
+```java
 var headers = ScxHttpHeaders.parse("""
 Content-Type: text/plain
 X-Test: 1
@@ -328,7 +328,7 @@ X-Test: 1
 
 `ScxURI` 是 HTTP URI 抽象。它内部保存的是未编码的原始字符串，编码只在 `encode(true)` 或 `toURI()` 时发生。([GitHub][16])
 
-```java id="q229u8"
+```java
 ScxURI uri = ScxURI.of("http://example.com/中文路径?a=空 格");
 
 System.out.println(uri.path());
@@ -338,7 +338,7 @@ System.out.println(uri.encode(true));
 
 创建空 URI 并逐步设置：
 
-```java id="m7hb6c"
+```java
 ScxURIWritable uri = ScxURI.of()
     .scheme("http")
     .host("localhost")
@@ -353,7 +353,7 @@ ScxURIWritable uri = ScxURI.of()
 
 `Parameters` 表示一组 HTTP 参数项，一个 name 可以对应多个 value。它专为 HTTP 场景设计，区分只读和可写版本。([GitHub][18])
 
-```java id="8gwhye"
+```java
 ParametersWritable<String, String> params = Parameters.of();
 
 params
@@ -371,7 +371,7 @@ System.out.println(params.getAll("a"));  // 所有值
 
 标准 HTTP 方法由 `HttpMethod` 枚举提供：
 
-```java id="fwf1pk"
+```java
 GET
 POST
 PUT
@@ -385,7 +385,7 @@ TRACE
 
 `ScxHttpMethod.of(String)` 会优先返回标准 `HttpMethod`，如果不是标准方法，则使用通用实现保存该方法名。HTTP Method 是大小写敏感的。([GitHub][20]) ([GitHub][21])
 
-```java id="ri8k6w"
+```java
 request.method(HttpMethod.POST);
 
 request.method("CUSTOM");
@@ -395,7 +395,7 @@ request.method("CUSTOM");
 
 标准状态码由 `HttpStatusCode` 枚举提供，例如：
 
-```java id="9jvv7y"
+```java
 OK
 CREATED
 NO_CONTENT
@@ -407,7 +407,7 @@ INTERNAL_SERVER_ERROR
 
 `ScxHttpStatusCode.of(int)` 会优先返回标准 `HttpStatusCode`，如果不是标准状态码，则使用通用实现保存该状态码。([GitHub][22]) ([GitHub][23])
 
-```java id="px6bop"
+```java
 response.statusCode(HttpStatusCode.OK);
 
 response.statusCode(418);
@@ -417,7 +417,7 @@ response.statusCode(418);
 
 `ScxMediaType` 表示 media type 的结构事实，也就是 `type/subtype + params`。它不是 `Content-Type`，因为 `Content-Type` 只是 Header 名称，真正的值语义是 Media Type。([GitHub][24])
 
-```java id="tkl8i4"
+```java
 ScxMediaType json = MediaType.APPLICATION_JSON;
 
 ScxMediaType custom = ScxMediaType
@@ -427,7 +427,7 @@ ScxMediaType custom = ScxMediaType
 
 常用枚举包括：
 
-```text id="yqkojc"
+```text
 TEXT_PLAIN
 TEXT_HTML
 TEXT_EVENT_STREAM
@@ -447,7 +447,7 @@ VIDEO_MP4
 
 `FormParams` 表示 `application/x-www-form-urlencoded` 表单参数。
 
-```java id="i5bazn"
+```java
 FormParamsWritable form = FormParams.of()
     .add("name", "Tom")
     .add("age", "18");
@@ -457,7 +457,7 @@ response.send(form);
 
 也可以从编码后的字符串解析：
 
-```java id="vtfdet"
+```java
 FormParams form = FormParams.parse("name=Tom&age=18");
 ```
 
@@ -467,7 +467,7 @@ FormParams form = FormParams.parse("name=Tom&age=18");
 
 `MultiPart` 表示 `multipart/form-data` 内容。
 
-```java id="y7j9mw"
+```java
 MultiPartWritable multiPart = MultiPart.of();
 
 // 添加 part 的具体 API 可结合 MultiPartWritable / MultiPartPart 使用
@@ -478,7 +478,7 @@ response.send(multiPart);
 
 读取 multipart：
 
-```java id="og5e1x"
+```java
 try (var stream = request.asMultiPart()) {
     for (var part : stream) {
         System.out.println(part.headers().contentDisposition());
@@ -493,7 +493,7 @@ try (var stream = request.asMultiPart()) {
 
 服务端发送 SSE：
 
-```java id="iqvg9w"
+```java
 var eventStream = request.response().sendEventStream();
 
 try (eventStream) {
@@ -510,7 +510,7 @@ try (eventStream) {
 
 客户端读取 SSE：
 
-```java id="plxe8v"
+```java
 var eventStream = response.asEventStream();
 
 EventClientEventStream
@@ -527,7 +527,7 @@ EventClientEventStream
 
 `ScxHttpException` 是一个标记接口。异常只要实现它，就可以被 `ScxHttpServerErrorHandler` 识别为 HTTP 响应异常。([GitHub][32])
 
-```java id="w5se2m"
+```java
 public class NotFoundException extends RuntimeException implements ScxHttpException {
 
     @Override
@@ -542,7 +542,7 @@ public class NotFoundException extends RuntimeException implements ScxHttpExcept
 
 错误阶段分为：
 
-```text id="3p3qlq"
+```text
 SYSTEM  系统阶段，例如解析 HTTP 头失败
 USER    用户阶段，例如用户处理器抛异常
 ```
