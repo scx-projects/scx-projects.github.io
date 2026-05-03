@@ -8,7 +8,7 @@ SCX Data 是一个底层无关的数据访问抽象库。
 
 ### Maven
 
-```xml id="8dn7kn"
+```xml
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-data</artifactId>
@@ -20,7 +20,7 @@ SCX Data 是一个底层无关的数据访问抽象库。
 
 SCX Data 中最常用的概念包括：
 
-```text id="28j2mr"
+```text
 Repository              数据仓库接口
 Finder                  查询结果读取器
 Query                   查询描述，包含条件、排序、offset、limit
@@ -33,7 +33,7 @@ DataAccessException     数据访问异常
 
 一般业务代码只需要面向 `Repository<Entity, ID>` 编程：
 
-```java id="6a6mtk"
+```java
 Repository<User, Long> userRepo = ...;
 ```
 
@@ -41,7 +41,7 @@ Repository<User, Long> userRepo = ...;
 
 ## 快速开始
 
-```java id="fgtm4v"
+```java
 import dev.scx.data.Repository;
 
 import java.util.List;
@@ -97,7 +97,7 @@ public class UserService {
 
 `Repository<Entity, ID>` 是 SCX Data 的核心接口。它定义了添加、批量添加、创建 `Finder`、更新、删除和清空数据等基础能力。([GitHub][3])
 
-```java id="wvuq6g"
+```java
 ID add(Entity entity, FieldPolicy fieldPolicy);
 
 List<ID> add(Collection<Entity> entityList, FieldPolicy fieldPolicy);
@@ -113,7 +113,7 @@ void clear();
 
 它也提供了一组便捷方法：
 
-```java id="ffl90t"
+```java
 repo.add(entity);
 repo.add(entityList);
 
@@ -140,13 +140,13 @@ repo.count(query);
 
 最简单的添加方式：
 
-```java id="t1maku"
+```java
 var id = userRepo.add(new User(null, "Tom", 18));
 ```
 
 指定参与添加的字段：
 
-```java id="no9c0c"
+```java
 var id = userRepo.add(
     user,
     include("name", "age", "email")
@@ -155,7 +155,7 @@ var id = userRepo.add(
 
 忽略空值：
 
-```java id="45i77n"
+```java
 var id = userRepo.add(
     user,
     includeAll().ignoreNull(true)
@@ -164,7 +164,7 @@ var id = userRepo.add(
 
 使用字段表达式：
 
-```java id="eex3cr"
+```java
 var id = userRepo.add(
     user,
     include("name", "age")
@@ -174,7 +174,7 @@ var id = userRepo.add(
 
 当 `entity` 为 `null` 时，也可以只通过字段策略添加数据：
 
-```java id="pifxsz"
+```java
 var id = userRepo.add(
     assignField("createdAt", "<current-time-expression>")
 );
@@ -186,19 +186,19 @@ var id = userRepo.add(
 
 ### 查询全部
 
-```java id="pnvf9l"
+```java
 var users = userRepo.find();
 ```
 
 ### 条件查询
 
-```java id="g31s7p"
+```java
 var user = userRepo.findFirst(
     eq("id", 1L)
 );
 ```
 
-```java id="fjanmu"
+```java
 var users = userRepo.find(
     eq("status", "ACTIVE")
 );
@@ -206,7 +206,7 @@ var users = userRepo.find(
 
 条件可以继续追加排序和分页：
 
-```java id="x6hft3"
+```java
 var users = userRepo.find(
     eq("status", "ACTIVE")
         .desc("createdAt")
@@ -216,7 +216,7 @@ var users = userRepo.find(
 
 多个条件：
 
-```java id="f9v19u"
+```java
 var users = userRepo.find(
     and(
         eq("status", "ACTIVE"),
@@ -230,7 +230,7 @@ var users = userRepo.find(
 
 动态条件：
 
-```java id="25flxr"
+```java
 import static dev.scx.data.query.BuildControl.*;
 import static dev.scx.data.query.QueryBuilder.*;
 
@@ -248,7 +248,7 @@ var users = userRepo.find(
 
 ### 查询指定字段
 
-```java id="wf3tni"
+```java
 var users = userRepo.find(
     eq("status", "ACTIVE"),
     include("id", "name", "email")
@@ -257,7 +257,7 @@ var users = userRepo.find(
 
 排除字段：
 
-```java id="y8bm2q"
+```java
 var users = userRepo.find(
     eq("status", "ACTIVE"),
     exclude("password", "secret")
@@ -266,7 +266,7 @@ var users = userRepo.find(
 
 ### 查询单条
 
-```java id="odtwj0"
+```java
 var user = userRepo.findFirst(eq("id", 1L));
 ```
 
@@ -274,7 +274,7 @@ var user = userRepo.findFirst(eq("id", 1L));
 
 ### 查询为 Map
 
-```java id="mfwz91"
+```java
 var rows = userRepo
     .finder(eq("status", "ACTIVE"))
     .listMap();
@@ -282,7 +282,7 @@ var rows = userRepo
 
 查询第一条 Map：
 
-```java id="43mldy"
+```java
 var row = userRepo
     .finder(eq("id", 1L))
     .firstMap();
@@ -290,13 +290,13 @@ var row = userRepo
 
 ### 查询为指定类型
 
-```java id="zs0zf8"
+```java
 var rows = userRepo
     .finder(eq("status", "ACTIVE"))
     .list(UserDTO.class);
 ```
 
-```java id="eg590a"
+```java
 var dto = userRepo
     .finder(eq("id", 1L))
     .first(UserDTO.class);
@@ -308,7 +308,7 @@ var dto = userRepo
 
 常用条件方法来自 `QueryBuilder`：
 
-```java id="z1u7sk"
+```java
 eq("id", 1)
 ne("status", "DELETED")
 
@@ -332,21 +332,21 @@ notBetween("age", 18, 60)
 
 组合条件：
 
-```java id="6xvsj5"
+```java
 and(
     eq("status", "ACTIVE"),
     gte("age", 18)
 )
 ```
 
-```java id="2t4zf3"
+```java
 or(
     eq("role", "ADMIN"),
     eq("role", "OWNER")
 )
 ```
 
-```java id="z1qa8q"
+```java
 not(eq("deleted", true))
 ```
 
@@ -356,7 +356,7 @@ not(eq("deleted", true))
 
 动态查询时，可以用 `BuildControl` 控制某个值为空时是否跳过条件：
 
-```java id="dage2o"
+```java
 import static dev.scx.data.query.BuildControl.*;
 import static dev.scx.data.query.QueryBuilder.*;
 
@@ -373,7 +373,7 @@ var users = userRepo.find(
 
 可用控制项：
 
-```java id="g7yiqs"
+```java
 SKIP_IF_NULL
 SKIP_IF_EMPTY_LIST
 SKIP_IF_EMPTY_STRING
@@ -386,7 +386,7 @@ USE_EXPRESSION_VALUE
 
 示例：
 
-```java id="4lpk1g"
+```java
 var users = userRepo.find(
     eq("<normalized-name-selector>", "<normalized-name-value>", USE_EXPRESSION, USE_EXPRESSION_VALUE)
 );
@@ -398,7 +398,7 @@ var users = userRepo.find(
 
 升序：
 
-```java id="ibgc7t"
+```java
 var users = userRepo.find(
     eq("status", "ACTIVE")
         .asc("name")
@@ -407,7 +407,7 @@ var users = userRepo.find(
 
 降序：
 
-```java id="j8bhm0"
+```java
 var users = userRepo.find(
     eq("status", "ACTIVE")
         .desc("createdAt")
@@ -416,7 +416,7 @@ var users = userRepo.find(
 
 分页：
 
-```java id="7vje2t"
+```java
 var users = userRepo.find(
     eq("status", "ACTIVE")
         .desc("createdAt")
@@ -431,7 +431,7 @@ var users = userRepo.find(
 
 更新实体：
 
-```java id="9vwebs"
+```java
 var patch = new User();
 patch.setName("Jerry");
 
@@ -444,7 +444,7 @@ long updated = userRepo.update(
 
 忽略空值更新：
 
-```java id="q6ayzu"
+```java
 long updated = userRepo.update(
     patch,
     includeAll().ignoreNull(true),
@@ -454,7 +454,7 @@ long updated = userRepo.update(
 
 排除不允许更新的字段：
 
-```java id="mgrx30"
+```java
 long updated = userRepo.update(
     patch,
     exclude("id", "createdAt"),
@@ -464,7 +464,7 @@ long updated = userRepo.update(
 
 使用字段表达式：
 
-```java id="cl97b8"
+```java
 long updated = userRepo.update(
     assignField("updatedAt", "<current-time-expression>"),
     eq("id", 1L)
@@ -473,7 +473,7 @@ long updated = userRepo.update(
 
 修改某个字段为实现相关表达式：
 
-```java id="mfwngp"
+```java
 long updated = userRepo.update(
     assignField("viewCount", "<increment-expression>"),
     eq("id", 1L)
@@ -484,11 +484,11 @@ long updated = userRepo.update(
 
 ## 删除数据
 
-```java id="o6xtp5"
+```java
 long deleted = userRepo.delete(eq("id", 1L));
 ```
 
-```java id="j1s6cc"
+```java
 long deleted = userRepo.delete(
     eq("status", "DELETED")
 );
@@ -498,11 +498,11 @@ long deleted = userRepo.delete(
 
 ## 统计数量
 
-```java id="ax0oka"
+```java
 long count = userRepo.count();
 ```
 
-```java id="tjad9s"
+```java
 long activeCount = userRepo.count(
     eq("status", "ACTIVE")
 );
@@ -516,25 +516,25 @@ long activeCount = userRepo.count(
 
 ### 包含字段
 
-```java id="wc10ta"
+```java
 include("id", "name", "email")
 ```
 
 ### 排除字段
 
-```java id="kgl2e5"
+```java
 exclude("password", "secret")
 ```
 
 ### 包含全部字段
 
-```java id="5oz92l"
+```java
 includeAll()
 ```
 
 ### 排除全部字段
 
-```java id="yrt694"
+```java
 excludeAll()
 ```
 
@@ -544,13 +544,13 @@ excludeAll()
 
 默认字段策略会忽略 `null` 值。可以通过 `ignoreNull(false)` 改为不忽略：
 
-```java id="18beq2"
+```java
 includeAll().ignoreNull(false)
 ```
 
 也可以针对单个字段设置：
 
-```java id="dsazgt"
+```java
 includeAll()
     .ignoreNull("nickname", false)
 ```
@@ -561,7 +561,7 @@ includeAll()
 
 虚拟字段主要用于查询：
 
-```java id="qrqkks"
+```java
 var rows = userRepo.find(
     eq("status", "ACTIVE"),
     include("id", "name")
@@ -571,7 +571,7 @@ var rows = userRepo.find(
 
 也可以直接使用构造方法：
 
-```java id="7pdl7h"
+```java
 virtualField("displayName", "<display-name-expression>")
 ```
 
@@ -581,11 +581,11 @@ virtualField("displayName", "<display-name-expression>")
 
 字段表达式主要用于添加和更新：
 
-```java id="wedm8p"
+```java
 assignField("updatedAt", "<current-time-expression>")
 ```
 
-```java id="vxwxlk"
+```java
 include("name")
     .assignField("updatedAt", "<current-time-expression>")
 ```
@@ -596,7 +596,7 @@ include("name")
 
 `Finder<Entity>` 是查询结果读取器。
 
-```java id="hmcbsc"
+```java
 Finder<User> finder = userRepo.finder(
     eq("status", "ACTIVE")
         .desc("createdAt")
@@ -606,31 +606,31 @@ Finder<User> finder = userRepo.finder(
 
 读取列表：
 
-```java id="ouey1o"
+```java
 List<User> users = finder.list();
 ```
 
 读取指定类型：
 
-```java id="7zv2aw"
+```java
 List<UserDTO> users = finder.list(UserDTO.class);
 ```
 
 读取 Map：
 
-```java id="s8rbya"
+```java
 List<Map<String, Object>> rows = finder.listMap();
 ```
 
 读取第一条：
 
-```java id="0h5w35"
+```java
 User user = finder.first();
 ```
 
 遍历：
 
-```java id="p6rmdd"
+```java
 finder.forEach(user -> {
     System.out.println(user);
 });
@@ -638,7 +638,7 @@ finder.forEach(user -> {
 
 遍历 Map：
 
-```java id="6gds8k"
+```java
 finder.forEachMap(row -> {
     System.out.println(row);
 });
@@ -650,7 +650,7 @@ finder.forEachMap(row -> {
 
 如果一个仓库实现了 `AggregatableRepository<Entity, ID>`，就可以使用聚合查询。
 
-```java id="p5q9jv"
+```java
 import static dev.scx.data.aggregation.AggregationBuilder.*;
 import static dev.scx.data.query.QueryBuilder.*;
 
@@ -668,7 +668,7 @@ var rows = orderRepo.aggregate(
 
 聚合对象：
 
-```java id="0ng2hm"
+```java
 var agg = aggregation()
     .groupBy("userId")
     .agg("totalAmount", "<total-amount-expression>")
@@ -677,7 +677,7 @@ var agg = aggregation()
 
 按表达式分组：
 
-```java id="2z1bjr"
+```java
 var agg = aggregation()
     .groupBy("period", "<period-expression>")
     .agg("totalAmount", "<total-amount-expression>");
@@ -685,7 +685,7 @@ var agg = aggregation()
 
 读取第一条聚合结果：
 
-```java id="du4oiv"
+```java
 var row = orderRepo.aggregateFirst(
     eq("status", "PAID"),
     aggregation().agg("totalAmount", "<total-amount-expression>")
@@ -700,7 +700,7 @@ var row = orderRepo.aggregateFirst(
 
 如果一个仓库实现了 `LockableRepository<Entity, ID>`，就可以使用锁模式查询。
 
-```java id="r4cjnr"
+```java
 import static dev.scx.data.LockMode.EXCLUSIVE;
 import static dev.scx.data.query.QueryBuilder.*;
 
@@ -714,7 +714,7 @@ var user = userRepo.findFirst(
 
 共享锁：
 
-```java id="2o9ye8"
+```java
 import static dev.scx.data.LockMode.SHARED;
 
 var users = userRepo.find(
@@ -725,7 +725,7 @@ var users = userRepo.find(
 
 锁模式包括：
 
-```java id="s48bag"
+```java
 SHARED
 EXCLUSIVE
 ```
@@ -736,7 +736,7 @@ EXCLUSIVE
 
 SCX Data 使用 `DataAccessException` 表示数据访问异常。它继承自 `RuntimeException`，提供 message、cause、message + cause 三种构造方式。([GitHub][15])
 
-```java id="ig9e14"
+```java
 try {
     var users = userRepo.find(eq("status", "ACTIVE"));
 } catch (DataAccessException e) {
@@ -748,7 +748,7 @@ try {
 
 SCX Data 是抽象层，真正的数据访问由具体实现提供。一个最小的 `Repository` 实现大致如下：
 
-```java id="n9zqos"
+```java
 import dev.scx.data.Finder;
 import dev.scx.data.Repository;
 import dev.scx.data.exception.DataAccessException;
@@ -802,7 +802,7 @@ public class UserRepository implements Repository<User, Long> {
 
 ## 完整示例
 
-```java id="nevd83"
+```java
 import dev.scx.data.Repository;
 import dev.scx.data.exception.DataAccessException;
 

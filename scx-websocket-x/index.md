@@ -6,7 +6,7 @@ SCX WebSocket X 是 `scx-websocket` 和 `scx-http-x` 之间的集成库。
 
 它适合这种场景：
 
-```text id="mhnufi"
+```text
 你希望使用 scx-http-x 启动 HTTP 服务，
 并在某些请求上升级为 WebSocket。
 
@@ -18,7 +18,7 @@ SCX WebSocket X 是 `scx-websocket` 和 `scx-http-x` 之间的集成库。
 
 ### Maven
 
-```xml id="sqfs7n"
+```xml
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-websocket-x</artifactId>
@@ -32,7 +32,7 @@ SCX WebSocket X 是 `scx-websocket` 和 `scx-http-x` 之间的集成库。
 
 SCX WebSocket X 中最常用的概念包括：
 
-```text id="9m8hj9"
+```text
 WebSocketClient                         WebSocket 客户端
 WebSocketOptions                        WebSocket 帧大小和消息大小选项
 WebSocketUpgradeRequestFactory          HTTP/1.1 服务端 Upgrade 请求工厂
@@ -48,7 +48,7 @@ ScxServerWebSocketHandshakeInvalidException   服务端握手请求非法异常
 
 核心流程分成两边：
 
-```text id="hvn11b"
+```text
 客户端：
 WebSocketClient -> handshake request -> handshake response -> ScxWebSocket
 
@@ -63,7 +63,7 @@ HttpServer + WebSocketUpgradeRequestFactory
 
 ### 服务端
 
-```java id="nr1bfx"
+```java
 import dev.scx.http.x.HttpServer;
 import dev.scx.http.x.HttpServerOptions;
 import dev.scx.websocket.event.ScxEventWebSocket;
@@ -110,7 +110,7 @@ public class WebSocketServerExample {
 
 ### 客户端
 
-```java id="imgng5"
+```java
 import dev.scx.websocket.x.WebSocketClient;
 
 public class WebSocketClientExample {
@@ -140,13 +140,13 @@ public class WebSocketClientExample {
 
 `WebSocketClient` 是客户端入口。
 
-```java id="a31s20"
+```java
 var client = new WebSocketClient();
 ```
 
 它内部持有一个 `HttpClient` 和一个 `WebSocketOptions`：
 
-```java id="qac6fe"
+```java
 var httpClient = client.httpClient();
 
 var options = client.options();
@@ -154,7 +154,7 @@ var options = client.options();
 
 构造方式：
 
-```java id="t30fwr"
+```java
 new WebSocketClient();
 
 new WebSocketClient(new WebSocketOptions());
@@ -168,7 +168,7 @@ new WebSocketClient(httpClient, new WebSocketOptions());
 
 客户端通过 `webSocketHandshakeRequest()` 创建握手请求。
 
-```java id="u7gbn6"
+```java
 var request = new WebSocketClient()
     .webSocketHandshakeRequest()
     .uri("ws://127.0.0.1:8080/websocket")
@@ -177,7 +177,7 @@ var request = new WebSocketClient()
 
 然后可以分两步执行：
 
-```java id="ri1nnt"
+```java
 var response = request.handshake();
 
 if (response.handshakeAccepted()) {
@@ -187,7 +187,7 @@ if (response.handshakeAccepted()) {
 
 也可以一步完成：
 
-```java id="2wzfy6"
+```java
 var webSocket = request.upgrade();
 ```
 
@@ -197,7 +197,7 @@ var webSocket = request.upgrade();
 
 客户端执行 `handshake()` 时，会自动设置：
 
-```text id="ve17lx"
+```text
 GET
 Connection: Upgrade
 Upgrade: websocket
@@ -209,7 +209,7 @@ Sec-WebSocket-Version: 13
 
 示例：
 
-```java id="axthku"
+```java
 var response = new WebSocketClient()
     .webSocketHandshakeRequest()
     .uri("ws://localhost:8080/chat")
@@ -221,7 +221,7 @@ var response = new WebSocketClient()
 
 客户端握手响应由 `ScxClientWebSocketHandshakeResponse` 表示。
 
-```java id="b5whio"
+```java
 var response = new WebSocketClient()
     .webSocketHandshakeRequest()
     .uri("ws://localhost:8080/chat")
@@ -236,7 +236,7 @@ var webSocket = response.upgrade();
 
 客户端校验规则包括：
 
-```text id="7fkirp"
+```text
 状态码必须是 101 Switching Protocols
 Connection 必须是 Upgrade
 Upgrade 必须是 websocket
@@ -249,7 +249,7 @@ Sec-WebSocket-Accept 必须和客户端 Sec-WebSocket-Key 计算结果一致
 
 `WebSocketOptions` 用来设置接收帧大小和接收消息大小。
 
-```java id="cwxyqv"
+```java
 var options = new WebSocketOptions()
     .maxFrameSize(1024 * 1024)
     .maxMessageSize(8 * 1024 * 1024);
@@ -259,7 +259,7 @@ var client = new WebSocketClient(options);
 
 默认值：
 
-```text id="gai060"
+```text
 maxFrameSize   = 16 MB
 maxMessageSize = 64 MB
 ```
@@ -268,7 +268,7 @@ maxMessageSize = 64 MB
 
 服务端也可以使用相同选项：
 
-```java id="rw4wih"
+```java
 var options = new WebSocketOptions()
     .maxFrameSize(1024 * 1024)
     .maxMessageSize(8 * 1024 * 1024);
@@ -283,7 +283,7 @@ var server = new HttpServer(
 
 服务端需要把 `WebSocketUpgradeRequestFactory` 注册到 `HttpServerOptions`。
 
-```java id="0sairv"
+```java
 var server = new HttpServer(
     new HttpServerOptions()
         .addUpgradeRequestFactory(new WebSocketUpgradeRequestFactory())
@@ -294,7 +294,7 @@ var server = new HttpServer(
 
 ### 判断 WebSocket 请求
 
-```java id="4qz9oi"
+```java
 server.onRequest(request -> {
     if (request instanceof ScxServerWebSocketHandshakeRequest wsRequest) {
         var webSocket = wsRequest.upgrade();
@@ -312,7 +312,7 @@ server.onRequest(request -> {
 
 `ScxServerWebSocketHandshakeRequest` 继承自 `ScxHttpServerRequest`，并额外提供：
 
-```java id="toph2n"
+```java
 ScxServerWebSocketHandshakeResponse response();
 
 String secWebSocketKey();
@@ -324,7 +324,7 @@ ScxWebSocket upgrade();
 
 示例：
 
-```java id="0y50lu"
+```java
 if (request instanceof ScxServerWebSocketHandshakeRequest wsRequest) {
     System.out.println(wsRequest.secWebSocketKey());
     System.out.println(wsRequest.secWebSocketVersion());
@@ -341,19 +341,19 @@ if (request instanceof ScxServerWebSocketHandshakeRequest wsRequest) {
 
 服务端调用 `upgrade()` 接受握手并完成协议升级。
 
-```java id="4gso0v"
+```java
 var webSocket = wsRequest.response().upgrade();
 ```
 
 或者：
 
-```java id="kzz8b7"
+```java
 var webSocket = wsRequest.upgrade();
 ```
 
 首次调用服务端 `upgrade()` 会：
 
-```text id="8i2by6"
+```text
 校验 Sec-WebSocket-Version
 校验 Sec-WebSocket-Key
 设置 Upgrade: websocket
@@ -370,7 +370,7 @@ var webSocket = wsRequest.upgrade();
 
 服务端握手校验包括：
 
-```text id="k15dqb"
+```text
 Sec-WebSocket-Version 必须存在
 Sec-WebSocket-Version 必须是 13
 Sec-WebSocket-Key 必须存在
@@ -386,7 +386,7 @@ Sec-WebSocket-Key 解码后必须是 16 字节
 
 `upgrade()` 返回的是 `scx-websocket` 中的 `ScxWebSocket`，所以可以继续包装成 `ScxEventWebSocket`。
 
-```java id="fwso5a"
+```java
 import dev.scx.websocket.event.ScxEventWebSocket;
 
 if (request instanceof ScxServerWebSocketHandshakeRequest wsRequest) {
@@ -409,7 +409,7 @@ if (request instanceof ScxServerWebSocketHandshakeRequest wsRequest) {
 
 `ScxEventWebSocket#start()` 是阻塞读取循环；如果不希望阻塞当前请求处理线程，可以放到独立线程或虚拟线程中运行。
 
-```java id="wz2q7d"
+```java
 var eventWebSocket = ScxEventWebSocket.of(wsRequest.upgrade());
 
 Thread.ofVirtual().start(eventWebSocket::start);
@@ -419,7 +419,7 @@ Thread.ofVirtual().start(eventWebSocket::start);
 
 也可以直接使用 `ScxWebSocket` 的消息级 API。
 
-```java id="w9n8dj"
+```java
 if (request instanceof ScxServerWebSocketHandshakeRequest wsRequest) {
     var webSocket = wsRequest.upgrade();
 
@@ -446,7 +446,7 @@ if (request instanceof ScxServerWebSocketHandshakeRequest wsRequest) {
 
 客户端可以使用 `ws://` URI：
 
-```java id="r7fj8p"
+```java
 var webSocket = new WebSocketClient()
     .webSocketHandshakeRequest()
     .uri("ws://127.0.0.1:8080/websocket")
@@ -461,7 +461,7 @@ var webSocket = new WebSocketClient()
 
 客户端握手请求继承自 `ScxHttpClientRequest`，并重写了一批方法返回 `ScxClientWebSocketHandshakeRequest`，方便链式调用。
 
-```java id="ef90nx"
+```java
 var webSocket = new WebSocketClient()
     .webSocketHandshakeRequest()
     .uri("ws://127.0.0.1:8080/websocket")
@@ -472,7 +472,7 @@ var webSocket = new WebSocketClient()
 
 支持链式返回的方法包括：
 
-```text id="edxms6"
+```text
 uri(...)
 headers(...)
 setHeader(...)
@@ -485,7 +485,7 @@ removeCookie(...)
 
 ## 完整示例：Echo Server + Client
 
-```java id="3ovjvn"
+```java
 import dev.scx.http.x.HttpServer;
 import dev.scx.http.x.HttpServerOptions;
 import dev.scx.websocket.WebSocketMessageType;
@@ -552,7 +552,7 @@ public class EchoExample {
 
 ## 完整示例：事件式聊天室骨架
 
-```java id="9beuuj"
+```java
 import dev.scx.http.x.HttpServer;
 import dev.scx.http.x.HttpServerOptions;
 import dev.scx.websocket.event.ScxEventWebSocket;
@@ -615,7 +615,7 @@ public class ChatServerExample {
 
 可能原因包括：
 
-```text id="59tph1"
+```text
 状态码不是 101
 缺少 Connection: Upgrade
 缺少 Upgrade: websocket
@@ -625,7 +625,7 @@ Sec-WebSocket-Accept 不正确
 
 异常类型是 `RuntimeException`。([GitHub][7])
 
-```java id="8rzlic"
+```java
 try {
     var webSocket = new WebSocketClient()
         .webSocketHandshakeRequest()
@@ -642,7 +642,7 @@ try {
 
 可能原因包括：
 
-```text id="bw3k37"
+```text
 缺少 Sec-WebSocket-Version
 Sec-WebSocket-Version 不是 13
 缺少 Sec-WebSocket-Key
@@ -652,7 +652,7 @@ Sec-WebSocket-Key 解码后不是 16 字节
 
 该异常实现 `ScxHttpException`，状态码是 `400 Bad Request`。([GitHub][12])
 
-```java id="ixck67"
+```java
 try {
     var webSocket = wsRequest.upgrade();
 } catch (ScxServerWebSocketHandshakeInvalidException e) {
@@ -696,7 +696,7 @@ WebSocket 协议握手要求使用 GET 和空请求体，所以 `ScxClientWebSoc
 
 可以。最简单方式是：
 
-```java id="lzhvxm"
+```java
 var webSocket = new WebSocketClient()
     .webSocketHandshakeRequest()
     .uri("ws://localhost:8080/websocket")
@@ -713,7 +713,7 @@ var webSocket = new WebSocketClient()
 
 可以。不要调用 `upgrade()`，而是按普通 HTTP 响应返回即可。
 
-```java id="jq86yc"
+```java
 if (!authorized) {
     wsRequest.response().statusCode(HttpStatusCode.UNAUTHORIZED).send("Unauthorized");
     return;

@@ -8,7 +8,7 @@ SCX HTTP Routing 是一个轻量的 HTTP 路由匹配库。
 
 ### Maven
 
-```xml id="k49lnj"
+```xml
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-http-routing</artifactId>
@@ -20,7 +20,7 @@ SCX HTTP Routing 是一个轻量的 HTTP 路由匹配库。
 
 SCX HTTP Routing 中最常用的概念包括：
 
-```text id="f4d9yu"
+```text
 Router             路由入口，方便接入 HTTP Server
 Route              一条路由，由请求匹配器、路径匹配器、方法匹配器和 handler 组成
 RoutingContext     当前路由上下文，包含 request、pathMatch、data 和 next()
@@ -37,7 +37,7 @@ RoutingPath        路由路径对象
 
 ## 快速开始
 
-```java id="y9wko1"
+```java
 import dev.scx.http.routing.Router;
 
 public class Main {
@@ -67,19 +67,19 @@ public class Main {
 
 `Router` 是最常用的入口。
 
-```java id="ubadz2"
+```java
 Router router = Router.of();
 ```
 
 它本身实现了 `Function1Void`，可以作为 HTTP Server 的 request handler 使用。处理请求时，`Router#apply(...)` 会根据 `request.path()` 创建 `RoutingInput`，创建共享 `data`，再创建 `RoutingContext` 并调用 `next()` 开始路由分发。([GitHub][2])
 
-```java id="g0kmvq"
+```java
 httpServer.onRequest(router);
 ```
 
 ### 注册路由
 
-```java id="w8dmm4"
+```java
 router.get("/hello", ctx -> {
     ctx.request().response().send("hello");
 });
@@ -101,7 +101,7 @@ router.delete("/users/:id", ctx -> {
 
 ### 匹配任意 HTTP 方法
 
-```java id="6lobnn"
+```java
 router.route("/ping", ctx -> {
     ctx.request().response().send("pong");
 });
@@ -111,7 +111,7 @@ router.route("/ping", ctx -> {
 
 ### 匹配任意路径和任意方法
 
-```java id="qzg3o8"
+```java
 router.route(ctx -> {
     System.out.println("请求进入路由系统");
     ctx.next();
@@ -124,7 +124,7 @@ router.route(ctx -> {
 
 注册路由时可以指定 priority：
 
-```java id="8rwy2y"
+```java
 router.route(-1, "/*", ctx -> {
     System.out.println("before all: " + ctx.pathMatch().capture("*"));
     ctx.next();
@@ -143,7 +143,7 @@ router.get("/hello", ctx -> {
 
 路由 handler 接收的是 `RoutingContext`。
 
-```java id="2k8wi8"
+```java
 router.get("/users/:id", ctx -> {
     var request = ctx.request();
     var id = ctx.pathMatch().capture("id");
@@ -154,7 +154,7 @@ router.get("/users/:id", ctx -> {
 
 `RoutingContext` 提供：
 
-```java id="dzgmyx"
+```java
 ScxHttpServerRequest request();
 
 RoutingInput routingInput();
@@ -172,7 +172,7 @@ void next();
 
 ### 继续匹配下一条路由
 
-```java id="7igdtp"
+```java
 router.route(-1, "/*", ctx -> {
     System.out.println("进入: " + ctx.routingInput().path().value());
     ctx.next();
@@ -189,7 +189,7 @@ router.get("/hello", ctx -> {
 
 ### 共享 data
 
-```java id="04ejtw"
+```java
 router.route(-1, "/*", ctx -> {
     ctx.data().put("startTime", System.nanoTime());
     ctx.next();
@@ -207,7 +207,7 @@ router.get("/hello", ctx -> {
 
 最常用的路径匹配器是模板路径匹配器。
 
-```java id="fjqfjt"
+```java
 router.get("/users/:id", ctx -> {
     var id = ctx.pathMatch().capture("id");
     ctx.request().response().send(id);
@@ -216,7 +216,7 @@ router.get("/users/:id", ctx -> {
 
 模板必须以 `/` 开头，由 `/` 分隔的 segment 组成。支持三类 segment：
 
-```text id="6f4ad8"
+```text
 静态段    例如 /users/list
 参数段    例如 /users/:id
 通配段    例如 /assets/*
@@ -226,7 +226,7 @@ router.get("/users/:id", ctx -> {
 
 ### 静态路径
 
-```java id="8ri1vb"
+```java
 router.get("/hello", ctx -> {
     ctx.request().response().send("hello");
 });
@@ -234,7 +234,7 @@ router.get("/hello", ctx -> {
 
 ### 参数路径
 
-```java id="laknvo"
+```java
 router.get("/users/:id/books/:bookId", ctx -> {
     var userId = ctx.pathMatch().capture("id");
     var bookId = ctx.pathMatch().capture("bookId");
@@ -245,7 +245,7 @@ router.get("/users/:id/books/:bookId", ctx -> {
 
 参数也可以按捕获顺序读取：
 
-```java id="i43jhx"
+```java
 router.get("/users/:id/books/:bookId", ctx -> {
     var userId = ctx.pathMatch().capture(0);
     var bookId = ctx.pathMatch().capture(1);
@@ -256,7 +256,7 @@ router.get("/users/:id/books/:bookId", ctx -> {
 
 ### 通配路径
 
-```java id="ll76cf"
+```java
 router.get("/assets/*", ctx -> {
     var rest = ctx.pathMatch().capture("*");
     ctx.request().response().send("assets path = " + rest);
@@ -271,7 +271,7 @@ router.get("/assets/*", ctx -> {
 
 `Router#mount(...)` 可以把一个子路由挂载到指定前缀下。
 
-```java id="int30k"
+```java
 router.mount("/api/v2/*", api -> {
     api.get("/users", ctx -> {
         ctx.request().response().send("user list");
@@ -289,7 +289,7 @@ router.mount("/api/v2/*", api -> {
 
 ### 挂载已有 Router
 
-```java id="5vmt1d"
+```java
 var api = Router.of();
 
 api.get("/users", ctx -> {
@@ -301,7 +301,7 @@ router.mount("/api/*", api);
 
 ### 指定挂载优先级
 
-```java id="yk5it4"
+```java
 router.mount(-1, "/api/*", api -> {
     api.get("/health", ctx -> {
         ctx.request().response().send("ok");
@@ -315,7 +315,7 @@ router.mount(-1, "/api/*", api -> {
 
 如果快捷 DSL 不够用，可以直接创建 `Route` 并指定路径匹配器。
 
-```java id="z20g0i"
+```java
 import dev.scx.http.routing.Route;
 import dev.scx.http.routing.path_matcher.PathMatcher;
 import dev.scx.http.routing.method_matcher.MethodMatcher;
@@ -333,7 +333,7 @@ router.route(
 
 `PathMatcher` 提供：
 
-```java id="2wx0y8"
+```java
 PathMatcher.any();
 
 PathMatcher.ofExact("/hello");
@@ -347,7 +347,7 @@ PathMatcher.ofRegex("/users/(\\d+)");
 
 ### 精确路径匹配
 
-```java id="p2qje2"
+```java
 var matcher = PathMatcher.ofExact("/hello");
 ```
 
@@ -355,7 +355,7 @@ var matcher = PathMatcher.ofExact("/hello");
 
 ### 模板路径匹配
 
-```java id="mk9ue5"
+```java
 var matcher = PathMatcher.ofTemplate("/users/:id");
 var match = matcher.match(RoutingPath.of("/users/100"));
 
@@ -366,7 +366,7 @@ System.out.println(match.capture("id")); // 100
 
 ### 正则路径匹配
 
-```java id="4eu6d3"
+```java
 var matcher = PathMatcher.ofRegex("/users/(\\d+)/books/(\\d+)");
 var match = matcher.match(RoutingPath.of("/users/123/books/456"));
 
@@ -382,7 +382,7 @@ System.out.println(match.capture(1)); // 456
 
 `MethodMatcher` 用于匹配 HTTP method。
 
-```java id="0wv6yk"
+```java
 import static dev.scx.http.method.HttpMethod.GET;
 import static dev.scx.http.method.HttpMethod.POST;
 
@@ -391,7 +391,7 @@ var matcher = MethodMatcher.of(GET, POST);
 
 `MethodMatcher.any()` 匹配任意方法；`MethodMatcher.of(...)` 至少需要一个 method，传入一个 method 时返回单方法匹配器，传入多个时返回多方法匹配器。([GitHub][14])
 
-```java id="77w0z7"
+```java
 router.route(
     Route.of(
         PathMatcher.ofTemplate("/users"),
@@ -409,7 +409,7 @@ router.route(
 
 `RequestMatcher` 用于在路径和方法之外，再根据请求对象本身做匹配。
 
-```java id="8p4ovg"
+```java
 import dev.scx.http.routing.request_matcher.RequestMatcher;
 
 var route = Route.of(
@@ -424,7 +424,7 @@ var route = Route.of(
 
 `RequestMatcher` 提供：
 
-```java id="hupfk6"
+```java
 RequestMatcher.any();
 
 RequestMatcher.typeIs(SomeRequestClass.class);
@@ -440,7 +440,7 @@ RequestMatcher.typeNot(SomeRequestClass.class);
 
 `Route` 是一条路由的完整描述。
 
-```java id="00iyry"
+```java
 Route route = Route.of(
     RequestMatcher.any(),
     PathMatcher.ofTemplate("/users/:id"),
@@ -456,7 +456,7 @@ router.route(route);
 
 `Route` 包含四部分：
 
-```java id="96no1g"
+```java
 RequestMatcher requestMatcher();
 
 PathMatcher pathMatcher();
@@ -472,7 +472,7 @@ Function1Void handler();
 
 `RouteTable` 是路由表抽象。
 
-```java id="m7lmc1"
+```java
 RouteTable table = router.routeTable();
 ```
 
@@ -480,13 +480,13 @@ RouteTable table = router.routeTable();
 
 默认 `Router` 使用的是 `PriorityRouteTable`：
 
-```java id="7a0zpm"
+```java
 PriorityRouteTable table = router.routeTable();
 ```
 
 `PriorityRouteTable` 支持添加路由、移除路由和查看只读快照。`remove(route)` 使用对象身份 `==` 移除所有使用该 `Route` 实例注册的条目，不使用 `equals`。([GitHub][4])
 
-```java id="rcx37p"
+```java
 Route route = Route.of(
     PathMatcher.ofTemplate("/hello"),
     MethodMatcher.any(),
@@ -503,7 +503,7 @@ router.remove(route);
 
 `RoutingInput` 是路由系统进行匹配和分流时使用的输入视图。它只建模 URI path，不包含 query。源码注释明确说明：query 属于原始请求 URI 的事实属性，不作为可重写的路由视图；如果需要读取或匹配 query，应通过 `request.uri()` 或 `RequestMatcher` 完成。([GitHub][19])
 
-```java id="pqe0gn"
+```java
 var input = RoutingInput.of("/users/100");
 var path = input.path();
 
@@ -519,7 +519,7 @@ System.out.println(path.segment(1));     // 100
 
 路由分发失败时主要有两种结果：
 
-```text id="fb1yrv"
+```text
 没有任何路径匹配         -> NotFoundException
 路径匹配但 HTTP 方法不匹配 -> MethodNotAllowedException
 ```
@@ -528,7 +528,7 @@ System.out.println(path.segment(1));     // 100
 
 ## 完整示例
 
-```java id="ejvhmh"
+```java
 import dev.scx.http.ScxHttpServer;
 import dev.scx.http.routing.Router;
 
@@ -607,7 +607,7 @@ public class RoutingExample {
 
 每条路由的匹配顺序是：
 
-```text id="r7uh5p"
+```text
 RequestMatcher -> PathMatcher -> MethodMatcher -> handler
 ```
 
@@ -635,7 +635,7 @@ RequestMatcher -> PathMatcher -> MethodMatcher -> handler
 
 使用 `ctx.pathMatch().capture("name")`：
 
-```java id="6srosp"
+```java
 router.get("/users/:id", ctx -> {
     var id = ctx.pathMatch().capture("id");
 });
