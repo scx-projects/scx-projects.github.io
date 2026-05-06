@@ -420,7 +420,7 @@ server.onRequest(request -> {
     var eventStream = request.response().sendEventStream();
 
     try (eventStream) {
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 100; i = i + 1) {
             eventStream.send(
                 SseEvent.of("hello " + i)
                     .id(String.valueOf(i))

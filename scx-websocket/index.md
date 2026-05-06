@@ -633,7 +633,7 @@ public class MessageWebSocketExample {
                 // 服务端角色：isClient = false
                 var webSocket = ScxWebSocket.of(new SocketEndpoint(socket), false);
 
-                for (int i = 0; i < 10; i++) {
+                for (int i = 0; i < 10; i = i + 1) {
                     webSocket.send("message " + i);
                 }
 
