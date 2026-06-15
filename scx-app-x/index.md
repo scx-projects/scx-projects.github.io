@@ -4,11 +4,7 @@ SCX App X 是基于 `scx-app` 的应用扩展模块集合。
 
 它把一个常见服务端应用需要的 HTTP Server、Web 路由、SQL Client、静态资源服务、CORS、定时任务、日志配置、自动修表和应用类自动扫描等能力拆成独立的 `ScxAppModule`，再交给 SCX App 统一完成配置读取、组件装配和启动顺序编排。
 
-当前仓库版本为 `0.4.0`。
-
 SCX App X 不是替代 `scx-app` 的启动器，而是为 `scx-app` 提供一组开箱即用的模块。
-
-项目依赖 `scx-app`、`scx-web`、`scx-data-sql`、`scx-scheduling`、`scx-jdbc-spy`、`scx-logging` 和 HikariCP。
 
 [GitHub](https://github.com/scx-projects/scx-app-x)
 

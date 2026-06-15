@@ -8,8 +8,6 @@ SCX WebSocket X 是 `scx-websocket` 和 `scx-http-x` 之间的集成库。
 
 `scx-websocket-x` 则把两者连接起来，提供 WebSocket 客户端握手、服务端 Upgrade 请求识别、握手校验、101 响应发送，以及升级后的 `ScxWebSocket` 创建。
 
-当前版本为 `0.3.0`，依赖 `scx-websocket 0.4.0` 和 `scx-http-x 0.4.0`。
-
 它适合这种场景：
 
 ```text

@@ -25,8 +25,6 @@ Node -> XML
 
 真正的 XML 实现由 `scx-format-xml` 提供。
 
-当前版本为 `0.1.0`。
-
 [GitHub](https://github.com/scx-projects/scx-format)
 
 ## 安装

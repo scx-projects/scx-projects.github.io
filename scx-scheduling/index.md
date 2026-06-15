@@ -4,9 +4,7 @@ SCX Scheduling 是一个轻量的 Java 调度任务库。
 
 它提供单次任务、固定频率任务、固定延迟任务和 Cron 任务四种调度方式，并通过统一的 `ScheduleHandle` 查看任务状态、运行次数、下一次运行时间或取消调度。
 
-SCX Scheduling 底层基于 `scx-timer`，Cron 表达式解析使用 `cron-utils`，
-
-当前版本为 `0.2.0`。
+SCX Scheduling 底层基于 `scx-timer`，Cron 表达式解析使用 `cron-utils`.
 
 [GitHub](https://github.com/scx-projects/scx-scheduling)
 

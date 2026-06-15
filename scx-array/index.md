@@ -6,8 +6,6 @@ SCX Array 是一个数组工具库。
 
 SCX Array 本身不是集合框架，也不是 `List`、`Set`、`Map` 的替代品。它只处理 Java 数组，尤其是 Java 中比较麻烦的基本类型数组。
 
-当前版本为 `0.0.1`。
-
 [GitHub](https://github.com/scx-projects/scx-array)
 
 ## 安装

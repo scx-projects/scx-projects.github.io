@@ -6,8 +6,6 @@ SCX Logging 是一个轻量日志库。
 
 SCX Logging 本身不是复杂日志框架。它不提供异步队列、复杂 layout 配置、滚动文件策略、MDC 完整语义或分布式日志能力。它的定位是一个简单、可嵌入、可配置、可桥接的日志核心。
 
-当前版本为 `0.0.1`。
-
 [GitHub](https://github.com/scx-projects/scx-logging)
 
 ## 安装

@@ -13,8 +13,6 @@ TypeNodeMapper 负责具体类型和 Node 的双向映射
 Context 表示一次转换过程中的执行现场
 ```
 
-当前版本为 `0.5.0`。
-
 [GitHub](https://github.com/scx-projects/scx-object-x)
 
 ## 安装

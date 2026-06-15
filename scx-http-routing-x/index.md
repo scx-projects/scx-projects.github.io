@@ -6,8 +6,6 @@ SCX HTTP Routing X 是 `scx-http-routing` 的扩展处理器库。
 
 SCX HTTP Routing X 本身不是 HTTP Server，也不是路由核心。HTTP 请求、响应、路由匹配和 `RoutingContext` 来自 `scx-http` 与 `scx-http-routing`。本模块只是提供可以挂载到路由上的常用处理器。
 
-当前版本为 `0.3.0`。
-
 [GitHub](https://github.com/scx-projects/scx-http-routing-x)
 
 ## 安装

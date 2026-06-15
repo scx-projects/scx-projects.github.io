@@ -6,8 +6,6 @@ SCX SQL MySQL 是 `scx-sql` 的 MySQL 方言模块。
 
 SCX SQL MySQL 本身不是 ORM，也不是新的 SQL 执行框架。真正的 SQL 执行、参数绑定、结果集提取、事务复用等能力来自 `scx-sql`；本模块只负责 MySQL 相关的方言差异。
 
-当前版本为 `0.5.0`。
-
 [GitHub](https://github.com/scx-projects/scx-sql-mysql)
 
 ## 安装

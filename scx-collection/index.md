@@ -13,8 +13,6 @@ CountMap    一个 key 对应一个计数值的映射
 
 SCX Collection 本身不是 JDK Collection Framework 的替代品，也不是 Stream API 的替代品。它更像是对 Java 集合的一组补充，用来处理“按 key 分组”和“按 key 计数”这两类常见场景。
 
-当前版本为 `0.1.0`。
-
 [GitHub](https://github.com/scx-projects/scx-collection)
 
 ## 安装

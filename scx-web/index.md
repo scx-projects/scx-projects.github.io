@@ -4,8 +4,6 @@ SCX Web 是一个轻量的 Java Web 路由封装库。
 
 它基于 SCX HTTP Routing，将普通 Java 对象中的方法编译成 HTTP / WebSocket 路由，让你可以用注解声明 Controller、用方法参数接收请求数据、用返回值直接生成响应。
 
-当前仓库版本为 `0.7.0`，项目依赖 `scx-http-routing-x`、`scx-websocket-x` 和 `scx-serialize`。
-
 [GitHub](https://github.com/scx-projects/scx-web)
 
 ## 安装

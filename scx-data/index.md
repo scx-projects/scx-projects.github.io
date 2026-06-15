@@ -6,8 +6,6 @@ SCX Data 是一个底层无关的数据访问抽象库。
 
 SCX Data 本身不绑定任何具体存储系统，也不定义底层查询语言；一个 `Repository` 实现可以把这些描述转换为任意数据源能够理解的访问方式。
 
-项目当前版本为 `0.3.0`。
-
 [GitHub](https://github.com/scx-projects/scx-data)
 
 ## 安装
