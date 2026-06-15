@@ -6,8 +6,6 @@ SCX HTTP Routing 是一个轻量的 HTTP 路由匹配库。
 
 它本身不负责启动 HTTP 服务，而是作为 `scx-http` 请求处理链中的路由层使用。
 
-当前版本为 `0.3.0`，依赖 `scx-http`。
-
 [GitHub](https://github.com/scx-projects/scx-http-routing)
 
 ## 安装

@@ -8,8 +8,6 @@ SCX Format XML 是 `scx-format` 的 XML 实现模块。
 
 它不试图完整保留文档型 XML 的所有结构信息。
 
-当前版本为 `0.3.0`。
-
 [GitHub](https://github.com/scx-projects/scx-format-xml)
 
 ## 安装
