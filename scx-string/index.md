@@ -6,8 +6,6 @@ SCX String 是一个字符串工具库。
 
 SCX String 本身不是模板引擎，也不是文本解析框架。它只是对常见字符串操作做了一层简单封装，让代码更直观、更容易复用。
 
-当前版本为 `0.1.0`。
-
 [GitHub](https://github.com/scx-projects/scx-string)
 
 ## 安装

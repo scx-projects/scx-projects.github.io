@@ -10,8 +10,6 @@ Object <-> Node <-> XML
 Object <-> Node <-> Object
 ```
 
-当前版本为 `0.4.0`。 依赖 `scx-object-x`、`scx-format-json` 和 `scx-format-xml`.
-
 [GitHub](https://github.com/scx-projects/scx-serialize)
 
 ## 安装

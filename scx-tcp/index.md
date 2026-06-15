@@ -16,8 +16,6 @@ TCP Client 连接远程地址
 少量 TLS 辅助能力
 ```
 
-当前版本为 `0.2.0`。
-
 [GitHub](https://github.com/scx-projects/scx-tcp)
 
 ## 安装

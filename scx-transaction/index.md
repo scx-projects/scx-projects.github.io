@@ -6,8 +6,6 @@ SCX Transaction 是一个底层无关的事务抽象库。
 
 SCX Transaction 本身不绑定 JDBC、数据库连接池、ORM、Repository 或任何具体存储系统。它只定义事务语义边界，具体事务如何开始、如何绑定到当前执行作用域、如何提交和回滚，由对应实现决定。
 
-当前版本为 `0.1.0`。
-
 [GitHub](https://github.com/scx-projects/scx-transaction)
 
 ## 安装
