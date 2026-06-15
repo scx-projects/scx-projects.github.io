@@ -13,8 +13,6 @@ SCX Exception 是一个用于异常包装和异常域隔离的轻量工具库。
 
 这在回调、高阶函数、模板方法、拦截器、事件处理器、流式处理等场景中非常有用。
 
-当前版本为 `0.2.0`。
-
 [GitHub](https://github.com/scx-projects/scx-exception)
 
 ## 安装

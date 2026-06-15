@@ -6,8 +6,6 @@ SCX Format JSON 是 `scx-format` 的 JSON 实现模块。
 
 SCX Format JSON 基于 Jackson Core 实现 JSON 读写，但对外暴露的是 `Node` 转换接口，而不是 Jackson 的对象模型。
 
-当前版本为 `0.3.0`。
-
 [GitHub](https://github.com/scx-projects/scx-format-json)
 
 ## 安装

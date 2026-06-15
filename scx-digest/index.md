@@ -15,8 +15,6 @@ Checksum         例如 CRC32、CRC32C
 
 SCX Digest 本身不是加密库，也不是密码存储库。它只是对 JDK 中常用的 `MessageDigest` 和 `Checksum` 做了一层简单封装，让常见摘要和校验计算更容易使用。
 
-当前版本为 `0.0.1`。
-
 [GitHub](https://github.com/scx-projects/scx-digest)
 
 ## 安装
