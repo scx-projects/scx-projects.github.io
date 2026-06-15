@@ -4,10 +4,6 @@ SCX App 是一个轻量的 Java 应用启动编排库。
 
 它本身不直接实现 Web Server、SQL Client 或 Scheduler，而是提供统一的应用入口、配置环境、模块定义、DI 容器装配、模块启动顺序解析以及应用停止流程。
 
-当前仓库版本为 `0.2.0`，
-
-项目依赖 `scx-serialize`、`scx-di`、`scx-ansi` 和 `scx-string`。
-
 [GitHub](https://github.com/scx-projects/scx-app)
 
 ## 安装
