@@ -37,7 +37,7 @@ SCX Data SQL 是 `scx-data` 和 `scx-sql` 之间的桥接库。
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-sql-mysql</artifactId>
-    <version>0.4.0</version>
+    <version>0.5.0</version>
 </dependency>
 ```
 
