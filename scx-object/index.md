@@ -10,8 +10,6 @@ SCX Object 本身不提供默认转换实现。
 
 真正的默认实现由 `scx-object-x` 提供。
 
-当前版本为 `0.4.0`。
-
 [GitHub](https://github.com/scx-projects/scx-object)
 
 ## 安装

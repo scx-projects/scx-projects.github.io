@@ -6,8 +6,6 @@ SCX Data SQL 是 `scx-data` 和 `scx-sql` 之间的桥接库。
 
 `scx-sql` 提供 SQL / JDBC 执行能力；而 `scx-data-sql` 负责把 `scx-data` 的查询描述、字段策略和聚合描述转换成 SQL，并通过 `SQLClient` 执行。
 
-当前版本为 `0.5.0`。
-
 它适合这种场景：
 
 ```text

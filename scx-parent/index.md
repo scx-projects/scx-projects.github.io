@@ -23,8 +23,6 @@ Central 发布配置
 
 一般情况下，SCX 系列模块都会继承 `scx-parent`，从而获得一致的构建行为。
 
-当前版本为 `1`。
-
 [GitHub](https://github.com/scx-projects/scx-parent)
 
 ## Maven
@@ -1422,14 +1420,6 @@ CI secret
 <parent>
     ...
 </parent>
-```
-
-### 当前版本是多少？
-
-当前版本是：
-
-```text
-1
 ```
 
 ### packaging 是什么？

@@ -17,8 +17,6 @@ Node       -> XML
 Node       -> Java Bean
 ```
 
-当前版本为 `0.1.0`。
-
 [GitHub](https://github.com/scx-projects/scx-node)
 
 ## 安装

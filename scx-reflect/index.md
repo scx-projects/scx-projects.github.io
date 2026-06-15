@@ -21,8 +21,6 @@ TypeReference 泛型捕获
 
 `scx-di`、`scx-sql`、`scx-serialize` 等库可以基于这套反射模型继续实现依赖注入、Bean 映射、序列化、类型转换、SQL 映射等能力。
 
-当前版本为 `0.3.0`。
-
 [GitHub](https://github.com/scx-projects/scx-reflect)
 
 ## 安装
