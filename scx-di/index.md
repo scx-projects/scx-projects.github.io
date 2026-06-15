@@ -6,8 +6,6 @@ SCX DI 是一个轻量的 Java 依赖注入核心库。
 
 SCX DI 不做包扫描，不提供 `@Component` / `@Service` 一类的自动发现机制，也没有复杂的生命周期模型。它的定位不是完整应用框架，而是一个小而清晰的 DI 组装核心。
 
-当前版本为 `0.4.0`，依赖 `scx-reflect`。
-
 [GitHub](https://github.com/scx-projects/scx-di)
 
 ## 安装

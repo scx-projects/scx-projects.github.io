@@ -6,8 +6,6 @@ SCX HTTP 是一个轻量的 HTTP 抽象库。
 
 SCX HTTP 本身不负责创建 TCP 连接，也不直接启动 HTTP 服务；它更像一组协议层抽象，供 `scx-http-x`、`scx-http-routing`、`scx-web`、`scx-websocket-x` 等上层或实现库复用。
 
-当前版本为 `0.5.0`。
-
 [GitHub](https://github.com/scx-projects/scx-http)
 
 ## 安装

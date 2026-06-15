@@ -4,8 +4,6 @@ SCX HTTP X 是 `scx-http` 的具体实现库。
 
 它基于 `scx-tcp` 和 Socket 提供可运行的 HTTP Client / Server，实现 HTTP/1.1 请求解析、响应发送、请求体读取、响应体发送、gzip、SSE、代理、TLS、Upgrade 扩展等能力。
 
-当前版本为 `0.4.0`，依赖 `scx-http 0.5.0` 和 `scx-tcp 0.2.0`。
-
 [GitHub](https://github.com/scx-projects/scx-http-x)
 
 ## 安装

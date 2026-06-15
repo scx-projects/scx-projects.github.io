@@ -8,8 +8,6 @@ SCX WebSocket 是一个轻量的 WebSocket 协议处理库。
 
 它更像一个基于 `ByteEndpoint` 的 WebSocket 协议层工具。
 
-当前版本为 `0.4.0`，依赖 `scx-io`、`scx-random` 和 `scx-digest`。
-
 [GitHub](https://github.com/scx-projects/scx-websocket)
 
 ## 安装
