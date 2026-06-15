@@ -6,8 +6,6 @@ SCX JDBC Spy 是一个轻量 JDBC 监听和 SQL 日志工具库。
 
 SCX JDBC Spy 本身不是 JDBC Driver，也不是连接池，也不是 ORM。它不会自己创建数据库连接，不会解析 JDBC URL，也不会执行 SQL。它只是包装已有 JDBC 对象，并在执行 SQL、设置参数、添加 batch、清空 batch 等关键位置插入监听逻辑。
 
-当前版本为 `0.4.0`。
-
 [GitHub](https://github.com/scx-projects/scx-jdbc-spy)
 
 ## 安装

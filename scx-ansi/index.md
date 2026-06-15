@@ -6,8 +6,6 @@ SCX ANSI 是一个用于生成 ANSI 彩色控制台文本的轻量工具库。
 
 SCX ANSI 本身不是终端模拟器，也不是日志框架。它只负责构造 ANSI 文本，并在当前环境不支持 ANSI 时自动退化为普通文本。
 
-当前版本为 `0.3.0`。
-
 [GitHub](https://github.com/scx-projects/scx-ansi)
 
 ## 安装

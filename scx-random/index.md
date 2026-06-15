@@ -6,8 +6,6 @@ SCX Random 是一个轻量随机工具库。
 
 SCX Random 本身不是加密随机库，也不是复杂随机分布库。它主要是对 JDK 中常用随机能力的一层简单封装，让日常业务中生成随机值、随机字符串和随机 token 更方便。
 
-当前版本为 `0.0.1`。
-
 [GitHub](https://github.com/scx-projects/scx-random)
 
 ## 安装
