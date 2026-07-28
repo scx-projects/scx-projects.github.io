@@ -14,7 +14,7 @@ SCX App 是一个轻量的 Java 应用启动编排库。
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-app</artifactId>
-    <version>0.6.0</version>
+    <version>0.6.2</version>
 </dependency>
 ```
 

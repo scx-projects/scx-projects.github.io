@@ -16,7 +16,7 @@ SCX App X 不是替代 `scx-app` 的启动器，而是为 `scx-app` 提供一组
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-app-x</artifactId>
-    <version>0.6.0</version>
+    <version>0.6.2</version>
 </dependency>
 ```
 
