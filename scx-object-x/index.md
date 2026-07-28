@@ -23,7 +23,7 @@ Context 表示一次转换过程中的执行现场
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-object-x</artifactId>
-    <version>0.10.0</version>
+    <version>0.10.2</version>
 </dependency>
 ```
 
@@ -43,7 +43,8 @@ SCX Object X 中最核心的概念包括：
 
 ```text
 DefaultObjectNodeConverter           默认 Object <-> Node 转换器
-DefaultObjectNodeConvertOptions      默认转换选项
+DefaultObjectNodeConvertOptions      单次转换选项接口
+DefaultObjectNodeConvertConfig       可链式设置的默认选项实现
 DefaultObjectNodeConverterBuilder    转换器构建器
 TypeNodeMapper                       单个 Java 类型和 Node 类型之间的映射器
 TypeNodeMapperFactory                根据 TypeInfo 创建 mapper 的工厂
@@ -92,11 +93,11 @@ Object
 
 ```java
 import dev.scx.node.Node;
-import dev.scx.object.x.DefaultObjectNodeConvertOptions;
+import dev.scx.object.x.DefaultObjectNodeConvertConfig;
 
 import static dev.scx.object.x.DefaultObjectNodeConverter.DEFAULT_OBJECT_NODE_CONVERTER;
 
-var options = new DefaultObjectNodeConvertOptions();
+var options = DefaultObjectNodeConvertConfig.of();
 
 var user = new User("Tom", 18);
 
@@ -129,7 +130,7 @@ var type = typeOf(new TypeReference<List<User>>() {});
 List<User> users = DEFAULT_OBJECT_NODE_CONVERTER.nodeToObject(
     node,
     type,
-    new DefaultObjectNodeConvertOptions()
+    DefaultObjectNodeConvertConfig.of()
 );
 ```
 
@@ -157,7 +158,7 @@ DefaultObjectNodeConverter
 ```java
 Node node = DEFAULT_OBJECT_NODE_CONVERTER.objectToNode(
     value,
-    new DefaultObjectNodeConvertOptions()
+    DefaultObjectNodeConvertConfig.of()
 );
 ```
 
@@ -219,13 +220,13 @@ char / Character
 ```java
 Node node = DEFAULT_OBJECT_NODE_CONVERTER.objectToNode(
     123,
-    new DefaultObjectNodeConvertOptions()
+    DefaultObjectNodeConvertConfig.of()
 );
 
 Integer value = DEFAULT_OBJECT_NODE_CONVERTER.nodeToObject(
     node,
     Integer.class,
-    new DefaultObjectNodeConvertOptions()
+    DefaultObjectNodeConvertConfig.of()
 );
 ```
 
@@ -238,15 +239,75 @@ String
 ```java
 Node node = DEFAULT_OBJECT_NODE_CONVERTER.objectToNode(
     "hello",
-    new DefaultObjectNodeConvertOptions()
+    DefaultObjectNodeConvertConfig.of()
 );
 ```
+
+### `byte[]` 特化
+
+`byte[]` 使用专门的 `ByteArrayNodeMapper`，不会直接按普通数组处理。
+
+默认情况下，`byte[]` 会编码为 Base64 字符串，并生成 `StringNode`：
+
+```java
+byte[] bytes = {1, 2, 3};
+
+Node node = DEFAULT_OBJECT_NODE_CONVERTER.objectToNode(
+    bytes,
+    DefaultObjectNodeConvertConfig.of()
+);
+
+byte[] bytes2 = DEFAULT_OBJECT_NODE_CONVERTER.nodeToObject(
+    node,
+    byte[].class,
+    DefaultObjectNodeConvertConfig.of()
+);
+```
+
+如果希望仍按数字数组转换，可以关闭 Base64 模式：
+
+```java
+var options = DefaultObjectNodeConvertConfig.of()
+    .putMapperOptions(
+        new ByteArrayNodeMapperOptions()
+            .useBase64(false)
+    );
+```
+
+此时 `byte[]` 会转换为 `ArrayNode`。
 
 ### 大数字
 
 ```text
 BigInteger
 BigDecimal
+```
+
+### 原子类型
+
+默认支持：
+
+```text
+AtomicInteger
+AtomicLong
+AtomicBoolean
+```
+
+它们分别按 `int`、`long`、`boolean` 的方式转换为值节点，转回时会创建对应的原子对象。
+
+```java
+var value = new AtomicInteger(123);
+
+Node node = DEFAULT_OBJECT_NODE_CONVERTER.objectToNode(
+    value,
+    DefaultObjectNodeConvertConfig.of()
+);
+
+AtomicInteger value2 = DEFAULT_OBJECT_NODE_CONVERTER.nodeToObject(
+    node,
+    AtomicInteger.class,
+    DefaultObjectNodeConvertConfig.of()
+);
 ```
 
 ### 时间类型
@@ -328,7 +389,7 @@ Object
 ```java
 Node node = DEFAULT_OBJECT_NODE_CONVERTER.objectToNode(
     value,
-    new DefaultObjectNodeConvertOptions()
+    DefaultObjectNodeConvertConfig.of()
 );
 ```
 
@@ -352,7 +413,7 @@ ObjectToNodeException
 User user = DEFAULT_OBJECT_NODE_CONVERTER.nodeToObject(
     node,
     User.class,
-    new DefaultObjectNodeConvertOptions()
+    DefaultObjectNodeConvertConfig.of()
 );
 ```
 
@@ -362,7 +423,7 @@ User user = DEFAULT_OBJECT_NODE_CONVERTER.nodeToObject(
 List<User> users = DEFAULT_OBJECT_NODE_CONVERTER.nodeToObject(
     node,
     typeOf(new TypeReference<List<User>>() {}),
-    new DefaultObjectNodeConvertOptions()
+    DefaultObjectNodeConvertConfig.of()
 );
 ```
 
@@ -378,9 +439,15 @@ NodeToObjectException
 NullNode.NULL
 ```
 
-## DefaultObjectNodeConvertOptions
+## DefaultObjectNodeConvertOptions 和 DefaultObjectNodeConvertConfig
 
-`DefaultObjectNodeConvertOptions` 是默认转换选项。
+`DefaultObjectNodeConvertOptions` 是单次转换选项接口。
+
+日常使用时，通过可链式设置的 `DefaultObjectNodeConvertConfig` 创建配置：
+
+```java
+var options = DefaultObjectNodeConvertConfig.of();
+```
 
 默认值包括：
 
@@ -390,31 +457,31 @@ mapperOptionsMap   null
 nodeTypeAdapter    null
 ```
 
-创建：
-
-```java
-var options = new DefaultObjectNodeConvertOptions();
-```
-
 设置最大嵌套深度：
 
 ```java
-var options = new DefaultObjectNodeConvertOptions()
+var options = DefaultObjectNodeConvertConfig.of()
     .maxNestingDepth(100);
 ```
 
 添加 mapper 专属选项：
 
 ```java
-var options = new DefaultObjectNodeConvertOptions()
-    .addMapperOptions(PrimitiveNullPolicy.DEFAULT_VALUE);
+var options = DefaultObjectNodeConvertConfig.of()
+    .putMapperOptions(PrimitiveNullPolicy.DEFAULT_VALUE);
 ```
 
 设置 Node 类型适配器：
 
 ```java
-var options = new DefaultObjectNodeConvertOptions()
+var options = DefaultObjectNodeConvertConfig.of()
     .nodeTypeAdapter(SingleValueWrapArrayAdapter.SINGLE_VALUE_WRAP_ARRAY_ADAPTER);
+```
+
+如果已经有一个 `DefaultObjectNodeConvertOptions`，可以复制成可修改配置：
+
+```java
+var config = DefaultObjectNodeConvertConfig.copyOf(options);
 ```
 
 ## 最大嵌套深度
@@ -430,7 +497,7 @@ var options = new DefaultObjectNodeConvertOptions()
 示例：
 
 ```java
-var options = new DefaultObjectNodeConvertOptions()
+var options = DefaultObjectNodeConvertConfig.of()
     .maxNestingDepth(50);
 ```
 
@@ -449,13 +516,13 @@ NodeToObjectException
 
 ## mapper 专属选项
 
-`addMapperOptions(...)` 用于添加 mapper 专属运行选项。
+`putMapperOptions(...)` 用于添加 mapper 专属运行选项。
 
 示例：
 
 ```java
-var options = new DefaultObjectNodeConvertOptions()
-    .addMapperOptions(
+var options = DefaultObjectNodeConvertConfig.of()
+    .putMapperOptions(
         PrimitiveNullPolicy.DEFAULT_VALUE,
         NumberConversionPolicy.EXACT
     );
@@ -493,7 +560,7 @@ ERROR
 DEFAULT_OBJECT_NODE_CONVERTER.nodeToObject(
     NullNode.NULL,
     int.class,
-    new DefaultObjectNodeConvertOptions()
+    DefaultObjectNodeConvertConfig.of()
 );
 ```
 
@@ -505,8 +572,8 @@ DEFAULT_OBJECT_NODE_CONVERTER.nodeToObject(
 var value = DEFAULT_OBJECT_NODE_CONVERTER.nodeToObject(
     NullNode.NULL,
     int.class,
-    new DefaultObjectNodeConvertOptions()
-        .addMapperOptions(PrimitiveNullPolicy.DEFAULT_VALUE)
+    DefaultObjectNodeConvertConfig.of()
+        .putMapperOptions(PrimitiveNullPolicy.DEFAULT_VALUE)
 );
 ```
 
@@ -554,15 +621,15 @@ DEFAULT
 var value = DEFAULT_OBJECT_NODE_CONVERTER.nodeToObject(
     new StringNode("123"),
     int.class,
-    new DefaultObjectNodeConvertOptions()
+    DefaultObjectNodeConvertConfig.of()
 );
 ```
 
 如果设置为精确转换：
 
 ```java
-var options = new DefaultObjectNodeConvertOptions()
-    .addMapperOptions(NumberConversionPolicy.EXACT);
+var options = DefaultObjectNodeConvertConfig.of()
+    .putMapperOptions(NumberConversionPolicy.EXACT);
 ```
 
 则会调用对应 Node 的 `asXxxExact()` 方法。
@@ -571,7 +638,24 @@ var options = new DefaultObjectNodeConvertOptions()
 
 ## 时间转换选项
 
-时间类型使用 `TemporalAccessorNodeMapperOptions`。
+时间类型按具体类型使用独立的 mapper options：
+
+```text
+LocalDateTimeNodeMapperOptions
+LocalDateNodeMapperOptions
+LocalTimeNodeMapperOptions
+OffsetDateTimeNodeMapperOptions
+OffsetTimeNodeMapperOptions
+ZonedDateTimeNodeMapperOptions
+YearNodeMapperOptions
+MonthNodeMapperOptions
+MonthDayNodeMapperOptions
+YearMonthNodeMapperOptions
+DayOfWeekNodeMapperOptions
+InstantNodeMapperOptions
+```
+
+这样可以分别为不同时间类型设置 formatter 和表示方式。`Duration`、`Period` 仍使用自身的标准字符串格式，不需要专属 options。
 
 默认情况下，时间类型会转换为字符串。
 
@@ -580,16 +664,16 @@ var now = OffsetDateTime.now();
 
 Node node = DEFAULT_OBJECT_NODE_CONVERTER.objectToNode(
     now,
-    new DefaultObjectNodeConvertOptions()
+    DefaultObjectNodeConvertConfig.of()
 );
 ```
 
-如果希望使用时间戳：
+如果希望使用时间戳，需要添加对应类型的 options。例如 `OffsetDateTime`：
 
 ```java
-var options = new DefaultObjectNodeConvertOptions()
-    .addMapperOptions(
-        new TemporalAccessorNodeMapperOptions()
+var options = DefaultObjectNodeConvertConfig.of()
+    .putMapperOptions(
+        new OffsetDateTimeNodeMapperOptions()
             .useTimestamp(true)
     );
 ```
@@ -600,22 +684,19 @@ var options = new DefaultObjectNodeConvertOptions()
 Node node = DEFAULT_OBJECT_NODE_CONVERTER.objectToNode(now, options);
 ```
 
-会生成 `LongNode`。
+会生成 `LongNode`。时间戳模式使用 epoch milli。
 
-需要注意，时间戳模式使用 epoch milli。
+对于 `LocalDate`、`LocalTime`、`LocalDateTime` 等不包含完整时区或偏移信息的类型，通常应使用字符串模式；时间戳模式要求该值能够转换为 `Instant`。
 
 ### 自定义时间格式
 
-可以按类型设置 formatter：
+formatter 也按具体类型设置。例如自定义 `LocalDate` 格式：
 
 ```java
-var options = new DefaultObjectNodeConvertOptions()
-    .addMapperOptions(
-        new TemporalAccessorNodeMapperOptions()
-            .setFormatter(
-                LocalDate.class,
-                DateTimeFormatter.ofPattern("yyyy/MM/dd")
-            )
+var options = DefaultObjectNodeConvertConfig.of()
+    .putMapperOptions(
+        new LocalDateNodeMapperOptions()
+            .formatter(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
     );
 ```
 
@@ -628,6 +709,18 @@ Node node = DEFAULT_OBJECT_NODE_CONVERTER.objectToNode(
 );
 ```
 
+不同时间类型的 options 彼此独立，可以在同一个配置中同时设置：
+
+```java
+var options = DefaultObjectNodeConvertConfig.of()
+    .putMapperOptions(
+        new LocalDateNodeMapperOptions()
+            .formatter(DateTimeFormatter.ofPattern("yyyy/MM/dd")),
+        new OffsetDateTimeNodeMapperOptions()
+            .useTimestamp(true)
+    );
+```
+
 ## Date 转换选项
 
 `java.util.Date` 使用 `DateNodeMapperOptions`。
@@ -637,8 +730,8 @@ Node node = DEFAULT_OBJECT_NODE_CONVERTER.objectToNode(
 如果希望使用时间戳：
 
 ```java
-var options = new DefaultObjectNodeConvertOptions()
-    .addMapperOptions(
+var options = DefaultObjectNodeConvertConfig.of()
+    .putMapperOptions(
         new DateNodeMapperOptions()
             .useTimestamp(true)
     );
@@ -658,8 +751,8 @@ Node node = DEFAULT_OBJECT_NODE_CONVERTER.objectToNode(
 也可以设置自定义 `DateFormat`：
 
 ```java
-var options = new DefaultObjectNodeConvertOptions()
-    .addMapperOptions(
+var options = DefaultObjectNodeConvertConfig.of()
+    .putMapperOptions(
         new DateNodeMapperOptions()
             .dateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
     );
@@ -691,7 +784,7 @@ user.age = 18;
 
 Node node = DEFAULT_OBJECT_NODE_CONVERTER.objectToNode(
     user,
-    new DefaultObjectNodeConvertOptions()
+    DefaultObjectNodeConvertConfig.of()
 );
 ```
 
@@ -710,7 +803,7 @@ Node node = DEFAULT_OBJECT_NODE_CONVERTER.objectToNode(
 User user2 = DEFAULT_OBJECT_NODE_CONVERTER.nodeToObject(
     node,
     User.class,
-    new DefaultObjectNodeConvertOptions()
+    DefaultObjectNodeConvertConfig.of()
 );
 ```
 
@@ -721,8 +814,8 @@ User user2 = DEFAULT_OBJECT_NODE_CONVERTER.nodeToObject(
 对象转 Node 时，可以控制字段是否写出。
 
 ```java
-var options = new DefaultObjectNodeConvertOptions()
-    .addMapperOptions(
+var options = DefaultObjectNodeConvertConfig.of()
+    .putMapperOptions(
         new BeanNodeMapperOptions()
             .beanFieldWritePolicy((fieldInfo, value) -> {
                 if (value == null) {
@@ -742,8 +835,8 @@ Object -> Node 时跳过 null 字段
 Node 转对象时，可以控制字段是否读取。
 
 ```java
-var options = new DefaultObjectNodeConvertOptions()
-    .addMapperOptions(
+var options = DefaultObjectNodeConvertConfig.of()
+    .putMapperOptions(
         new BeanNodeMapperOptions()
             .beanFieldReadPolicy(fieldInfo -> {
                 if (fieldInfo.name().equals("ignoreMe")) {
@@ -782,7 +875,7 @@ var user = new User("Tom", 18);
 
 Node node = DEFAULT_OBJECT_NODE_CONVERTER.objectToNode(
     user,
-    new DefaultObjectNodeConvertOptions()
+    DefaultObjectNodeConvertConfig.of()
 );
 ```
 
@@ -801,7 +894,7 @@ Node node = DEFAULT_OBJECT_NODE_CONVERTER.objectToNode(
 User user2 = DEFAULT_OBJECT_NODE_CONVERTER.nodeToObject(
     node,
     User.class,
-    new DefaultObjectNodeConvertOptions()
+    DefaultObjectNodeConvertConfig.of()
 );
 ```
 
@@ -816,7 +909,7 @@ var list = List.of(1, 2, 3);
 
 Node node = DEFAULT_OBJECT_NODE_CONVERTER.objectToNode(
     list,
-    new DefaultObjectNodeConvertOptions()
+    DefaultObjectNodeConvertConfig.of()
 );
 ```
 
@@ -832,7 +925,7 @@ Node node = DEFAULT_OBJECT_NODE_CONVERTER.objectToNode(
 Integer[] array = DEFAULT_OBJECT_NODE_CONVERTER.nodeToObject(
     node,
     Integer[].class,
-    new DefaultObjectNodeConvertOptions()
+    DefaultObjectNodeConvertConfig.of()
 );
 ```
 
@@ -842,7 +935,7 @@ Integer[] array = DEFAULT_OBJECT_NODE_CONVERTER.nodeToObject(
 List<Integer> list2 = DEFAULT_OBJECT_NODE_CONVERTER.nodeToObject(
     node,
     typeOf(new TypeReference<List<Integer>>() {}),
-    new DefaultObjectNodeConvertOptions()
+    DefaultObjectNodeConvertConfig.of()
 );
 ```
 
@@ -860,7 +953,7 @@ map.put("age", 18);
 
 Node node = DEFAULT_OBJECT_NODE_CONVERTER.objectToNode(
     map,
-    new DefaultObjectNodeConvertOptions()
+    DefaultObjectNodeConvertConfig.of()
 );
 ```
 
@@ -893,7 +986,7 @@ public enum Status {
 ```java
 Node node = DEFAULT_OBJECT_NODE_CONVERTER.objectToNode(
     Status.OK,
-    new DefaultObjectNodeConvertOptions()
+    DefaultObjectNodeConvertConfig.of()
 );
 ```
 
@@ -909,7 +1002,7 @@ Node node = DEFAULT_OBJECT_NODE_CONVERTER.objectToNode(
 Status status = DEFAULT_OBJECT_NODE_CONVERTER.nodeToObject(
     new StringNode("OK"),
     Status.class,
-    new DefaultObjectNodeConvertOptions()
+    DefaultObjectNodeConvertConfig.of()
 );
 ```
 
@@ -925,7 +1018,7 @@ Status status = DEFAULT_OBJECT_NODE_CONVERTER.nodeToObject(
 Path path = DEFAULT_OBJECT_NODE_CONVERTER.nodeToObject(
     new StringNode("x/a/b/c.txt"),
     Path.class,
-    new DefaultObjectNodeConvertOptions()
+    DefaultObjectNodeConvertConfig.of()
 );
 ```
 
@@ -935,7 +1028,7 @@ Path path = DEFAULT_OBJECT_NODE_CONVERTER.nodeToObject(
 File file = DEFAULT_OBJECT_NODE_CONVERTER.nodeToObject(
     new StringNode("x/a/b/c.txt"),
     File.class,
-    new DefaultObjectNodeConvertOptions()
+    DefaultObjectNodeConvertConfig.of()
 );
 ```
 
@@ -945,7 +1038,7 @@ Charset 示例：
 Charset charset = DEFAULT_OBJECT_NODE_CONVERTER.nodeToObject(
     new StringNode("UTF-8"),
     Charset.class,
-    new DefaultObjectNodeConvertOptions()
+    DefaultObjectNodeConvertConfig.of()
 );
 ```
 
@@ -962,7 +1055,7 @@ node.put("name", "Tom");
 
 Node result = DEFAULT_OBJECT_NODE_CONVERTER.objectToNode(
     node,
-    new DefaultObjectNodeConvertOptions()
+    DefaultObjectNodeConvertConfig.of()
 );
 ```
 
@@ -972,7 +1065,7 @@ Node 转 Node 类型也可以：
 ObjectNode objectNode = DEFAULT_OBJECT_NODE_CONVERTER.nodeToObject(
     node,
     ObjectNode.class,
-    new DefaultObjectNodeConvertOptions()
+    DefaultObjectNodeConvertConfig.of()
 );
 ```
 
@@ -990,7 +1083,7 @@ ObjectNode objectNode = DEFAULT_OBJECT_NODE_CONVERTER.nodeToObject(
 Object value = DEFAULT_OBJECT_NODE_CONVERTER.nodeToObject(
     node,
     Object.class,
-    new DefaultObjectNodeConvertOptions()
+    DefaultObjectNodeConvertConfig.of()
 );
 ```
 
@@ -1042,7 +1135,7 @@ public interface NodeTypeAdapter {
 使用：
 
 ```java
-var options = new DefaultObjectNodeConvertOptions()
+var options = DefaultObjectNodeConvertConfig.of()
     .nodeTypeAdapter(
         SingleValueWrapArrayAdapter.SINGLE_VALUE_WRAP_ARRAY_ADAPTER
     );
@@ -1067,7 +1160,7 @@ var options = new DefaultObjectNodeConvertOptions()
 使用：
 
 ```java
-var options = new DefaultObjectNodeConvertOptions()
+var options = DefaultObjectNodeConvertConfig.of()
     .nodeTypeAdapter(
         SingleElementArrayUnwrapAdapter.SINGLE_ELEMENT_ARRAY_UNWRAP_ADAPTER
     );
@@ -1083,7 +1176,7 @@ var adapter = new CompositeNodeTypeAdapter(
     SingleValueWrapArrayAdapter.SINGLE_VALUE_WRAP_ARRAY_ADAPTER
 );
 
-var options = new DefaultObjectNodeConvertOptions()
+var options = DefaultObjectNodeConvertConfig.of()
     .nodeTypeAdapter(adapter);
 ```
 
@@ -1229,7 +1322,7 @@ Context 表示一次转换过程。
 
 ```java
 import dev.scx.node.Node;
-import dev.scx.object.x.DefaultObjectNodeConvertOptions;
+import dev.scx.object.x.DefaultObjectNodeConvertConfig;
 
 import static dev.scx.object.x.DefaultObjectNodeConverter.DEFAULT_OBJECT_NODE_CONVERTER;
 
@@ -1241,7 +1334,7 @@ public class ObjectXDemo {
         user.name = "Tom";
         user.age = 18;
 
-        var options = new DefaultObjectNodeConvertOptions();
+        var options = DefaultObjectNodeConvertConfig.of();
 
         Node node = DEFAULT_OBJECT_NODE_CONVERTER.objectToNode(user, options);
 
@@ -1270,7 +1363,7 @@ public class ObjectXDemo {
 ## 完整示例：泛型 List
 
 ```java
-import dev.scx.object.x.DefaultObjectNodeConvertOptions;
+import dev.scx.object.x.DefaultObjectNodeConvertConfig;
 import dev.scx.reflect.TypeReference;
 
 import java.util.List;
@@ -1283,7 +1376,7 @@ var users = List.of(
     new User("Jerry", 20)
 );
 
-var options = new DefaultObjectNodeConvertOptions();
+var options = DefaultObjectNodeConvertConfig.of();
 
 var node = DEFAULT_OBJECT_NODE_CONVERTER.objectToNode(users, options);
 
@@ -1303,14 +1396,14 @@ public record User(String name, Integer age) {
 ## 完整示例：忽略 null 字段
 
 ```java
-import dev.scx.object.x.DefaultObjectNodeConvertOptions;
+import dev.scx.object.x.DefaultObjectNodeConvertConfig;
 import dev.scx.object.x.mapper.bean.BeanFieldWriteResult;
 import dev.scx.object.x.mapper.bean.BeanNodeMapperOptions;
 
 import static dev.scx.object.x.DefaultObjectNodeConverter.DEFAULT_OBJECT_NODE_CONVERTER;
 
-var options = new DefaultObjectNodeConvertOptions()
-    .addMapperOptions(
+var options = DefaultObjectNodeConvertConfig.of()
+    .putMapperOptions(
         new BeanNodeMapperOptions()
             .beanFieldWritePolicy((fieldInfo, value) -> {
                 if (value == null) {
@@ -1327,13 +1420,13 @@ Node node = DEFAULT_OBJECT_NODE_CONVERTER.objectToNode(user, options);
 
 ```java
 import dev.scx.node.NullNode;
-import dev.scx.object.x.DefaultObjectNodeConvertOptions;
+import dev.scx.object.x.DefaultObjectNodeConvertConfig;
 import dev.scx.object.x.mapper.primitive.PrimitiveNullPolicy;
 
 import static dev.scx.object.x.DefaultObjectNodeConverter.DEFAULT_OBJECT_NODE_CONVERTER;
 
-var options = new DefaultObjectNodeConvertOptions()
-    .addMapperOptions(PrimitiveNullPolicy.DEFAULT_VALUE);
+var options = DefaultObjectNodeConvertConfig.of()
+    .putMapperOptions(PrimitiveNullPolicy.DEFAULT_VALUE);
 
 int value = DEFAULT_OBJECT_NODE_CONVERTER.nodeToObject(
     NullNode.NULL,
@@ -1351,18 +1444,18 @@ int value = DEFAULT_OBJECT_NODE_CONVERTER.nodeToObject(
 ## 完整示例：时间戳模式
 
 ```java
-import dev.scx.object.x.DefaultObjectNodeConvertOptions;
+import dev.scx.object.x.DefaultObjectNodeConvertConfig;
 import dev.scx.object.x.mapper.time.DateNodeMapperOptions;
-import dev.scx.object.x.mapper.time.TemporalAccessorNodeMapperOptions;
+import dev.scx.object.x.mapper.time.OffsetDateTimeNodeMapperOptions;
 
 import java.time.OffsetDateTime;
 import java.util.Date;
 
 import static dev.scx.object.x.DefaultObjectNodeConverter.DEFAULT_OBJECT_NODE_CONVERTER;
 
-var options = new DefaultObjectNodeConvertOptions()
-    .addMapperOptions(
-        new TemporalAccessorNodeMapperOptions().useTimestamp(true),
+var options = DefaultObjectNodeConvertConfig.of()
+    .putMapperOptions(
+        new OffsetDateTimeNodeMapperOptions().useTimestamp(true),
         new DateNodeMapperOptions().useTimestamp(true)
     );
 
@@ -1396,7 +1489,7 @@ mapper 查找缓存如何工作
 
 ### 2. Options 管本次运行策略
 
-`DefaultObjectNodeConvertOptions` 表示一次转换的运行策略。
+`DefaultObjectNodeConvertOptions` 表示一次转换的运行策略，通常通过 `DefaultObjectNodeConvertConfig` 创建和设置。
 
 它可以控制：
 
@@ -1439,7 +1532,9 @@ bean fields
 PrimitiveNullPolicy
 NumberConversionPolicy
 DateNodeMapperOptions
-TemporalAccessorNodeMapperOptions
+LocalDateNodeMapperOptions
+OffsetDateTimeNodeMapperOptions
+ByteArrayNodeMapperOptions
 BeanNodeMapperOptions
 ```
 
