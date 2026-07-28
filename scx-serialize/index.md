@@ -20,7 +20,7 @@ Object <-> Node <-> Object
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-serialize</artifactId>
-    <version>0.10.0</version>
+    <version>0.10.2</version>
 </dependency>
 ```
 
