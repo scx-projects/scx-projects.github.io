@@ -234,7 +234,7 @@ Node name = objectNode.get("name");
 Node old = objectNode.remove("name");
 ```
 
-字段不存在时，`get()` 和 `remove()` 都返回 Java `null`。
+字段不存在时，`get()` 和 `remove()` 都返回 Java `null`；如果字段值为 `NullNode.NULL`，则返回 `NullNode.NULL`。
 
 遍历字段：
 
@@ -373,7 +373,9 @@ Node first = arrayNode.get(0);
 Node old = arrayNode.remove(0);
 ```
 
-索引越界时，`remove()` 也返回 Java `null`。但 `add(index, ...)` 和 `set(index, ...)` 在索引越界时会抛出 `IndexOutOfBoundsException`。
+索引越界时，`remove()` 也返回 Java `null`。如果对应位置存放的是 `NullNode.NULL`，`get()` 和 `remove()` 返回 `NullNode.NULL`，以区分元素不存在和数据层面的 null。
+
+`add(index, ...)` 允许索引范围为 `0` 到 `size()`（含）；`set(index, ...)` 只允许 `0` 到 `size() - 1`。两者索引越界时都会抛出 `IndexOutOfBoundsException`。
 
 遍历数组：
 
