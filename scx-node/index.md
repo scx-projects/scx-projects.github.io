@@ -247,7 +247,7 @@ for (var field : objectNode) {
 
 ## ObjectNode 的 null 规则
 
-`ObjectNode` 的 `put()`、`get()` 和 `remove()` 都不允许字段名为 Java `null`。
+`ObjectNode` 不允许字段名为 `null`。
 
 ```java
 objectNode.put(null, "Tom");
