@@ -234,6 +234,8 @@ Node name = objectNode.get("name");
 Node old = objectNode.remove("name");
 ```
 
+字段不存在时，`get()` 和 `remove()` 都返回 Java `null`。
+
 遍历字段：
 
 ```java
@@ -245,7 +247,7 @@ for (var field : objectNode) {
 
 ## ObjectNode 的 null 规则
 
-`ObjectNode` 不允许字段名为 `null`。
+`ObjectNode` 的 `put()`、`get()` 和 `remove()` 都不允许字段名为 Java `null`。
 
 ```java
 objectNode.put(null, "Tom");
@@ -363,11 +365,15 @@ arrayNode.set(0, new StringNode("new value"));
 Node first = arrayNode.get(0);
 ```
 
+索引越界时（包括负数索引），`get()` 返回 Java `null`。
+
 按索引删除：
 
 ```java
 Node old = arrayNode.remove(0);
 ```
+
+索引越界时，`remove()` 也返回 Java `null`。但 `add(index, ...)` 和 `set(index, ...)` 在索引越界时会抛出 `IndexOutOfBoundsException`。
 
 遍历数组：
 
@@ -404,7 +410,7 @@ Java null       不允许作为节点元素
 NullNode.NULL   表示数组中的 null
 ```
 
-## ArrayNode 便捷 add 方法
+## ArrayNode 便捷 add 和 set 方法
 
 `ArrayNode` 提供了一组便捷方法。
 
@@ -430,6 +436,13 @@ BigInteger  -> BigIntegerNode
 BigDecimal  -> BigDecimalNode
 String      -> StringNode
 boolean     -> BooleanNode
+```
+
+`add(index, value)` 和 `set(index, value)` 也支持上述值类型，`set()` 返回被替换的原节点。例如：
+
+```java
+arrayNode.add(0, "first");
+Node old = arrayNode.set(0, 123);
 ```
 
 ## ValueNode
