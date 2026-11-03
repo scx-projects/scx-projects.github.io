@@ -16,7 +16,7 @@ SCX App X 提供一组基于 `ScxAppModule` 的开箱即用应用模块，可以
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-app-x</artifactId>
-    <version>0.7.0</version>
+    <version>0.7.1</version>
 </dependency>
 ```
 
@@ -321,6 +321,10 @@ SCX App X 主要通过 `scx-config.json` 配置。下面是一个常见配置：
         "enabled": false,
         "path": "AppRoot:ssl/my_keystore.jks",
         "password": "123456"
+      },
+      "websocket": {
+        "max-frame-size": "8MB",
+        "max-message-size": "32MB"
       }
     },
     "sql": {
@@ -456,6 +460,8 @@ scx.http.use-development-error-page 默认 false
 scx.http.ssl.enabled                默认 false
 scx.http.ssl.path                   SSL keystore 路径
 scx.http.ssl.password               SSL keystore 密码
+scx.http.websocket.max-frame-size   WebSocket 最大帧大小，默认 16MB
+scx.http.websocket.max-message-size WebSocket 最大消息大小，默认 64MB
 ```
 
 如果启用 SSL，`scx.http.ssl.path` 和 `scx.http.ssl.password` 都不能为空。HTTP 模块会用 `TLS.of(path, password)` 创建 TLS 配置。
@@ -474,7 +480,7 @@ scx.http.ssl.password               SSL keystore 密码
 }
 ```
 
-HTTP 模块还会默认注册 `WebSocketUpgradeRequestFactory`，因此可以配合 `scx-websocket-x` 和 `ScxAppWebModule` 暴露 WebSocket 升级路由。
+HTTP 模块会使用 `scx.http.websocket.max-frame-size` 和 `scx.http.websocket.max-message-size` 创建 `WebSocketOptions`，并注册 `WebSocketUpgradeRequestFactory`，因此可以配合 `scx-websocket-x` 和 `ScxAppWebModule` 暴露 WebSocket 升级路由。这两个配置使用 `ConfiguredSize`，支持 `KB`、`MB` 等大小单位；不配置时使用上述默认值。
 
 ### 获取 Router 和 HttpServer
 
