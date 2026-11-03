@@ -27,7 +27,7 @@ Node       -> Java Bean
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-node</artifactId>
-    <version>0.10.0</version>
+    <version>0.10.1</version>
 </dependency>
 ```
 
@@ -234,6 +234,8 @@ Node name = objectNode.get("name");
 Node old = objectNode.remove("name");
 ```
 
+字段不存在时，`get()` 和 `remove()` 都返回 Java `null`；如果字段值为 `NullNode.NULL`，则返回 `NullNode.NULL`。
+
 遍历字段：
 
 ```java
@@ -363,11 +365,17 @@ arrayNode.set(0, new StringNode("new value"));
 Node first = arrayNode.get(0);
 ```
 
+索引越界时（包括负数索引），`get()` 返回 Java `null`。
+
 按索引删除：
 
 ```java
 Node old = arrayNode.remove(0);
 ```
+
+索引越界时，`remove()` 也返回 Java `null`。如果对应位置存放的是 `NullNode.NULL`，`get()` 和 `remove()` 返回 `NullNode.NULL`，以区分元素不存在和数据层面的 null。
+
+`add(index, ...)` 允许索引范围为 `0` 到 `size()`（含）；`set(index, ...)` 只允许 `0` 到 `size() - 1`。两者索引越界时都会抛出 `IndexOutOfBoundsException`。
 
 遍历数组：
 
@@ -404,7 +412,7 @@ Java null       不允许作为节点元素
 NullNode.NULL   表示数组中的 null
 ```
 
-## ArrayNode 便捷 add 方法
+## ArrayNode 便捷 add 和 set 方法
 
 `ArrayNode` 提供了一组便捷方法。
 
@@ -430,6 +438,13 @@ BigInteger  -> BigIntegerNode
 BigDecimal  -> BigDecimalNode
 String      -> StringNode
 boolean     -> BooleanNode
+```
+
+`add(index, value)` 和 `set(index, value)` 也支持上述值类型，`set()` 返回被替换的原节点。例如：
+
+```java
+arrayNode.add(0, "first");
+Node old = arrayNode.set(0, 123);
 ```
 
 ## ValueNode
