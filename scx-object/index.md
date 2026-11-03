@@ -518,11 +518,11 @@ DefaultObjectNodeConverter.DEFAULT_OBJECT_NODE_CONVERTER
 
 ```java
 import dev.scx.node.Node;
-import dev.scx.object.x.DefaultObjectNodeConvertOptions;
+import dev.scx.object.x.DefaultObjectNodeConvertConfig;
 
 import static dev.scx.object.x.DefaultObjectNodeConverter.DEFAULT_OBJECT_NODE_CONVERTER;
 
-var options = new DefaultObjectNodeConvertOptions();
+var options = DefaultObjectNodeConvertConfig.of();
 
 Node node = DEFAULT_OBJECT_NODE_CONVERTER.objectToNode(
     new User("Tom", 18),

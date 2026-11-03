@@ -520,16 +520,13 @@ mapperOptionsMap = null
 可以通过 `putMapperOptions(...)` 覆盖底层对象映射器的对应选项：
 
 ```java
-import dev.scx.object.x.mapper.time.TemporalAccessorNodeMapperOptions;
+import dev.scx.object.x.mapper.time.LocalDateTimeNodeMapperOptions;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 var config = SerializeConfig.of().putMapperOptions(
-    new TemporalAccessorNodeMapperOptions().setFormatter(
-        LocalDateTime.class,
-        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
-    )
+    new LocalDateTimeNodeMapperOptions().formatter(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))
 );
 
 String json = ScxSerialize.toJson(car, config);
