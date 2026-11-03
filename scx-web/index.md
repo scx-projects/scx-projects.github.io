@@ -14,7 +14,7 @@ SCX Web 是一个 Java Web 路由封装库。
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-web</artifactId>
-    <version>0.10.3</version>
+    <version>0.10.4</version>
 </dependency>
 ```
 
