@@ -35,7 +35,7 @@ Node -> XML
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-format</artifactId>
-    <version>0.10.0</version>
+    <version>0.10.1</version>
 </dependency>
 ```
 
@@ -47,7 +47,7 @@ Node -> XML
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-format-json</artifactId>
-    <version>0.10.0</version>
+    <version>0.10.1</version>
 </dependency>
 ```
 
@@ -57,7 +57,7 @@ Node -> XML
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-format-xml</artifactId>
-    <version>0.10.0</version>
+    <version>0.10.1</version>
 </dependency>
 ```
 

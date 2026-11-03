@@ -20,7 +20,7 @@ SCX Object 本身不提供默认转换实现。
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-object</artifactId>
-    <version>0.10.0</version>
+    <version>0.10.1</version>
 </dependency>
 ```
 
@@ -30,7 +30,7 @@ SCX Object 本身不提供默认转换实现。
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-object-x</artifactId>
-    <version>0.10.0</version>
+    <version>0.10.3</version>
 </dependency>
 ```
 

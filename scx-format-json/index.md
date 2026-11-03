@@ -16,7 +16,7 @@ SCX Format JSON 基于 Jackson Core 实现 JSON 读写，但对外暴露的是 `
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-format-json</artifactId>
-    <version>0.10.0</version>
+    <version>0.10.1</version>
 </dependency>
 ```
 
