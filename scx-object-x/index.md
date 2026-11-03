@@ -23,7 +23,7 @@ Context 表示一次转换过程中的执行现场
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-object-x</artifactId>
-    <version>0.10.2</version>
+    <version>0.10.3</version>
 </dependency>
 ```
 
