@@ -289,7 +289,7 @@ SCX Format 本身只是抽象层，通常配合具体实现使用。
 以 JSON 为例：
 
 ```java
-import dev.scx.format.json.JsonNodeConvertOptions;
+import dev.scx.format.json.JsonNodeConvertConfig;
 import dev.scx.format.json.JsonNodeConverter;
 import dev.scx.node.Node;
 
@@ -300,11 +300,11 @@ Node node = converter.formatToNode("""
       "name": "Tom",
       "age": 18
     }
-    """, new JsonNodeConvertOptions());
+    """, JsonNodeConvertConfig.of());
 
 String json = converter.nodeToFormatString(
     node,
-    new JsonNodeConvertOptions().prettyPrint(true)
+    JsonNodeConvertConfig.of().prettyPrint(true)
 );
 ```
 
@@ -312,7 +312,7 @@ String json = converter.nodeToFormatString(
 
 ```java
 import dev.scx.format.xml.XmlNodeConverter;
-import dev.scx.format.xml.XmlNodeConverterOptions;
+import dev.scx.format.xml.XmlNodeConvertConfig;
 import dev.scx.node.Node;
 
 var converter = new XmlNodeConverter();
@@ -322,11 +322,11 @@ Node node = converter.formatToNode("""
         <name>Tom</name>
         <age>18</age>
     </user>
-    """, new XmlNodeConverterOptions());
+    """, XmlNodeConvertConfig.of());
 
 String xml = converter.nodeToFormatString(
     node,
-    new XmlNodeConverterOptions().rootName("user")
+    XmlNodeConvertConfig.of().rootName("user")
 );
 ```
 
@@ -469,7 +469,7 @@ public interface FormatNodeConvertOptions {
 
 ```text
 JsonNodeConvertOptions implements FormatNodeConvertOptions
-XmlNodeConverterOptions  implements FormatNodeConvertOptions
+XmlNodeConvertOptions implements FormatNodeConvertOptions
 ```
 
 JSON 和 XML 的配置项完全不同，因此不能放在核心接口中。
@@ -708,7 +708,7 @@ XML 实现模块：
 ```text
 scx-format-xml
     XmlNodeConverter
-    XmlNodeConverterOptions
+    XmlNodeConvertOptions
     XmlElementConverter
     ElementNodeConverter
     Element
@@ -803,7 +803,7 @@ Node node = converter.formatToNode(
       "age": 18
     }
     """,
-    new JsonNodeConvertOptions()
+    JsonNodeConvertConfig.of()
 );
 ```
 
@@ -812,7 +812,7 @@ Node node = converter.formatToNode(
 ```java
 String json = converter.nodeToFormatString(
     node,
-    new JsonNodeConvertOptions().prettyPrint(true)
+    JsonNodeConvertConfig.of().prettyPrint(true)
 );
 ```
 
@@ -828,7 +828,7 @@ Node node = converter.formatToNode(
         <age>18</age>
     </user>
     """,
-    new XmlNodeConverterOptions()
+    XmlNodeConvertConfig.of()
 );
 ```
 
@@ -837,7 +837,7 @@ Node node = converter.formatToNode(
 ```java
 String xml = converter.nodeToFormatString(
     node,
-    new XmlNodeConverterOptions().rootName("user")
+    XmlNodeConvertConfig.of().rootName("user")
 );
 ```
 

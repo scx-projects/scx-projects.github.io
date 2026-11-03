@@ -76,7 +76,7 @@ JsonNodeConvertOptions 负责配置读取和写出行为
 最简单的用法是把 JSON 字符串解析成 `Node`。
 
 ```java
-import dev.scx.format.json.JsonNodeConvertOptions;
+import dev.scx.format.json.JsonNodeConvertConfig;
 import dev.scx.format.json.JsonNodeConverter;
 import dev.scx.node.Node;
 
@@ -90,7 +90,7 @@ Node node = converter.formatToNode(
       "active": true
     }
     """,
-    new JsonNodeConvertOptions()
+    JsonNodeConvertConfig.of()
 );
 ```
 
@@ -99,7 +99,7 @@ Node node = converter.formatToNode(
 ```java
 String json = converter.nodeToFormatString(
     node,
-    new JsonNodeConvertOptions()
+    JsonNodeConvertConfig.of()
 );
 ```
 
@@ -108,7 +108,7 @@ String json = converter.nodeToFormatString(
 ```java
 String prettyJson = converter.nodeToFormatString(
     node,
-    new JsonNodeConvertOptions().prettyPrint(true)
+    JsonNodeConvertConfig.of().prettyPrint(true)
 );
 ```
 
@@ -168,7 +168,7 @@ var json = """
 
 Node node = new JsonNodeConverter().formatToNode(
     json,
-    new JsonNodeConvertOptions()
+    JsonNodeConvertConfig.of()
 );
 ```
 
@@ -215,7 +215,7 @@ root.put("user", user);
 
 String json = new JsonNodeConverter().nodeToFormatString(
     root,
-    new JsonNodeConvertOptions().prettyPrint(true)
+    JsonNodeConvertConfig.of().prettyPrint(true)
 );
 ```
 
@@ -301,7 +301,7 @@ Node node = converter.formatToNode(
       "d": 1.25
     }
     """,
-    new JsonNodeConvertOptions()
+    JsonNodeConvertConfig.of()
 );
 ```
 
@@ -334,7 +334,7 @@ null
 ```java
 Node node = converter.formatToNode(
     "123",
-    new JsonNodeConvertOptions()
+    JsonNodeConvertConfig.of()
 );
 ```
 
@@ -345,7 +345,7 @@ Node node = converter.formatToNode(
 如果输入中没有任何有效内容，会抛出 `FormatToNodeException`。
 
 ```java
-converter.formatToNode("", new JsonNodeConvertOptions());
+converter.formatToNode("", JsonNodeConvertConfig.of());
 ```
 
 如果一个合法 JSON 值后面还有多余内容，也会抛出异常。
@@ -353,7 +353,7 @@ converter.formatToNode("", new JsonNodeConvertOptions());
 ```java
 converter.formatToNode(
     "{} {}",
-    new JsonNodeConvertOptions()
+    JsonNodeConvertConfig.of()
 );
 ```
 
@@ -394,7 +394,7 @@ USE_NEW
 使用新值覆盖旧值。
 
 ```java
-var options = new JsonNodeConvertOptions()
+var options = JsonNodeConvertConfig.of()
     .duplicateFieldPolicy(DuplicateFieldPolicy.USE_NEW);
 ```
 
@@ -420,7 +420,7 @@ var options = new JsonNodeConvertOptions()
 保留旧值，忽略新值。
 
 ```java
-var options = new JsonNodeConvertOptions()
+var options = JsonNodeConvertConfig.of()
     .duplicateFieldPolicy(DuplicateFieldPolicy.USE_OLD);
 ```
 
@@ -446,7 +446,7 @@ var options = new JsonNodeConvertOptions()
 发现重复字段时直接抛出异常。
 
 ```java
-var options = new JsonNodeConvertOptions()
+var options = JsonNodeConvertConfig.of()
     .duplicateFieldPolicy(DuplicateFieldPolicy.THROW);
 ```
 
@@ -466,7 +466,7 @@ var options = new JsonNodeConvertOptions()
 把重复字段合并成数组。
 
 ```java
-var options = new JsonNodeConvertOptions()
+var options = JsonNodeConvertConfig.of()
     .duplicateFieldPolicy(DuplicateFieldPolicy.MERGE);
 ```
 
@@ -496,42 +496,42 @@ var options = new JsonNodeConvertOptions()
 例如允许 Java 风格注释：
 
 ```java
-var options = new JsonNodeConvertOptions()
+var options = JsonNodeConvertConfig.of()
     .allowJavaComments(true);
 ```
 
 允许 YAML 风格注释：
 
 ```java
-var options = new JsonNodeConvertOptions()
+var options = JsonNodeConvertConfig.of()
     .allowYamlComments(true);
 ```
 
 允许单引号：
 
 ```java
-var options = new JsonNodeConvertOptions()
+var options = JsonNodeConvertConfig.of()
     .allowSingleQuotes(true);
 ```
 
 允许未加引号的属性名：
 
 ```java
-var options = new JsonNodeConvertOptions()
+var options = JsonNodeConvertConfig.of()
     .allowUnquotedPropertyNames(true);
 ```
 
 允许尾随逗号：
 
 ```java
-var options = new JsonNodeConvertOptions()
+var options = JsonNodeConvertConfig.of()
     .allowTrailingComma(true);
 ```
 
 允许缺失值：
 
 ```java
-var options = new JsonNodeConvertOptions()
+var options = JsonNodeConvertConfig.of()
     .allowMissingValues(true);
 ```
 
@@ -544,7 +544,7 @@ var options = new JsonNodeConvertOptions()
 可配置的数字读取相关选项包括：
 
 ```java
-new JsonNodeConvertOptions()
+JsonNodeConvertConfig.of()
     .allowLeadingDecimalPointForNumbers(true)
     .allowLeadingPlusSignForNumbers(true)
     .allowLeadingZerosForNumbers(true)
@@ -569,7 +569,7 @@ NaN / Infinity
 可配置的写出选项包括：
 
 ```java
-new JsonNodeConvertOptions()
+JsonNodeConvertConfig.of()
     .quotePropertyNames(true)
     .writeNanAsStrings(true)
     .escapeNonAscii(false)
@@ -590,7 +590,7 @@ writeNumbersAsStrings    是否把数字写为字符串
 ```java
 var json = converter.nodeToFormatString(
     node,
-    new JsonNodeConvertOptions().escapeNonAscii(true)
+    JsonNodeConvertConfig.of().escapeNonAscii(true)
 );
 ```
 
@@ -599,7 +599,7 @@ var json = converter.nodeToFormatString(
 `prettyPrint(true)` 用于格式化输出。
 
 ```java
-var options = new JsonNodeConvertOptions()
+var options = JsonNodeConvertConfig.of()
     .prettyPrint(true);
 
 String json = converter.nodeToFormatString(node, options);
@@ -608,7 +608,7 @@ String json = converter.nodeToFormatString(node, options);
 未开启 pretty print 时，输出更紧凑。
 
 ```java
-var options = new JsonNodeConvertOptions()
+var options = JsonNodeConvertConfig.of()
     .prettyPrint(false);
 ```
 
@@ -620,10 +620,10 @@ false
 
 ## 读写限制
 
-`JsonNodeConvertOptions` 支持设置读写约束。
+`JsonNodeConvertOptions` 定义读写约束，使用 `JsonNodeConvertConfig.of()` 创建并设置。
 
 ```java
-var options = new JsonNodeConvertOptions()
+var options = JsonNodeConvertConfig.of()
     .maxNestingDepth(200)
     .maxDocumentLength(10_000_000)
     .maxTokenCount(1_000_000)
@@ -656,7 +656,7 @@ var json = "[".repeat(100) + "]".repeat(100);
 
 converter.formatToNode(
     json,
-    new JsonNodeConvertOptions().maxNestingDepth(80)
+    JsonNodeConvertConfig.of().maxNestingDepth(80)
 );
 ```
 
@@ -669,7 +669,7 @@ converter.formatToNode(
 如果需要自定义字符转义，可以设置 `characterEscapes(...)`。
 
 ```java
-var options = new JsonNodeConvertOptions()
+var options = JsonNodeConvertConfig.of()
     .characterEscapes(myCharacterEscapes);
 ```
 
@@ -680,7 +680,7 @@ var options = new JsonNodeConvertOptions()
 可以设置根值分隔符。
 
 ```java
-var options = new JsonNodeConvertOptions()
+var options = JsonNodeConvertConfig.of()
     .rootValueSeparator(mySeparator);
 ```
 
@@ -691,7 +691,7 @@ var options = new JsonNodeConvertOptions()
 可以设置最高非转义字符。
 
 ```java
-var options = new JsonNodeConvertOptions()
+var options = JsonNodeConvertConfig.of()
     .highestNonEscapedChar(127);
 ```
 
@@ -708,7 +708,7 @@ var options = new JsonNodeConvertOptions()
 可以通过 `quoteChar(...)` 修改。
 
 ```java
-var options = new JsonNodeConvertOptions()
+var options = JsonNodeConvertConfig.of()
     .quoteChar('\'');
 ```
 
@@ -722,7 +722,7 @@ var options = new JsonNodeConvertOptions()
 try (var reader = new FileReader(file, StandardCharsets.UTF_8)) {
     Node node = converter.formatToNode(
         reader,
-        new JsonNodeConvertOptions()
+        JsonNodeConvertConfig.of()
     );
 }
 ```
@@ -734,7 +734,7 @@ try (var inputStream = new FileInputStream(file)) {
     Node node = converter.formatToNode(
         inputStream,
         StandardCharsets.UTF_8,
-        new JsonNodeConvertOptions()
+        JsonNodeConvertConfig.of()
     );
 }
 ```
@@ -745,7 +745,7 @@ try (var inputStream = new FileInputStream(file)) {
 Node node = converter.formatToNode(
     file,
     StandardCharsets.UTF_8,
-    new JsonNodeConvertOptions()
+    JsonNodeConvertConfig.of()
 );
 ```
 
@@ -758,7 +758,7 @@ try (var writer = new FileWriter(file, StandardCharsets.UTF_8)) {
     converter.nodeToFormat(
         node,
         writer,
-        new JsonNodeConvertOptions().prettyPrint(true)
+        JsonNodeConvertConfig.of().prettyPrint(true)
     );
 }
 ```
@@ -771,7 +771,7 @@ try (var outputStream = new FileOutputStream(file)) {
         node,
         outputStream,
         StandardCharsets.UTF_8,
-        new JsonNodeConvertOptions().prettyPrint(true)
+        JsonNodeConvertConfig.of().prettyPrint(true)
     );
 }
 ```
@@ -783,7 +783,7 @@ converter.nodeToFormatFile(
     node,
     file,
     StandardCharsets.UTF_8,
-    new JsonNodeConvertOptions().prettyPrint(true)
+    JsonNodeConvertConfig.of().prettyPrint(true)
 );
 ```
 
@@ -824,7 +824,7 @@ try {
 ## 完整示例
 
 ```java
-import dev.scx.format.json.JsonNodeConvertOptions;
+import dev.scx.format.json.JsonNodeConvertConfig;
 import dev.scx.format.json.JsonNodeConverter;
 import dev.scx.node.ArrayNode;
 import dev.scx.node.ObjectNode;
@@ -853,14 +853,14 @@ public class JsonFormatDemo {
         user.put("tags", tags);
         root.put("user", user);
 
-        var options = new JsonNodeConvertOptions()
+        var options = JsonNodeConvertConfig.of()
             .prettyPrint(true);
 
         String json = converter.nodeToFormatString(root, options);
 
         System.out.println(json);
 
-        var node2 = converter.formatToNode(json, new JsonNodeConvertOptions());
+        var node2 = converter.formatToNode(json, JsonNodeConvertConfig.of());
 
         System.out.println(root.equals(node2));
     }
@@ -931,14 +931,14 @@ NullNode        writeNull
 
 因为 JSON 对象中重复字段如何处理，并不是所有格式都共有的问题。
 
-### 6. JsonNodeConvertOptions 是可变配置对象
+### 6. JsonNodeConvertOptions 是接口，JsonNodeConvertConfig 是可变配置对象
 
-`JsonNodeConvertOptions` 的 setter 方法会返回 `this`。
+`JsonNodeConvertOptions` 是只读选项接口，不能通过 `new` 创建；`JsonNodeConvertConfig` 是它的可修改实现，通过 `JsonNodeConvertConfig.of()` 创建。`JsonNodeConvertConfig` 的 setter 方法返回 `this`。
 
 因此可以链式配置：
 
 ```java
-var options = new JsonNodeConvertOptions()
+var options = JsonNodeConvertConfig.of()
     .prettyPrint(true)
     .allowTrailingComma(true)
     .duplicateFieldPolicy(DuplicateFieldPolicy.MERGE);
@@ -995,7 +995,7 @@ Node <-> Java Object
 需要格式化时：
 
 ```java
-new JsonNodeConvertOptions().prettyPrint(true)
+JsonNodeConvertConfig.of().prettyPrint(true)
 ```
 
 ### 支持 JSON 顶层字符串、数字、布尔和 null 吗？
@@ -1015,14 +1015,14 @@ DuplicateFieldPolicy.USE_NEW
 ### 如何让重复字段抛异常？
 
 ```java
-new JsonNodeConvertOptions()
+JsonNodeConvertConfig.of()
     .duplicateFieldPolicy(DuplicateFieldPolicy.THROW)
 ```
 
 ### 如何把重复字段合并成数组？
 
 ```java
-new JsonNodeConvertOptions()
+JsonNodeConvertConfig.of()
     .duplicateFieldPolicy(DuplicateFieldPolicy.MERGE)
 ```
 
@@ -1033,13 +1033,13 @@ new JsonNodeConvertOptions()
 如果需要允许 Java 注释：
 
 ```java
-new JsonNodeConvertOptions().allowJavaComments(true)
+JsonNodeConvertConfig.of().allowJavaComments(true)
 ```
 
 如果需要允许 YAML 注释：
 
 ```java
-new JsonNodeConvertOptions().allowYamlComments(true)
+JsonNodeConvertConfig.of().allowYamlComments(true)
 ```
 
 ### 支持单引号吗？
@@ -1047,7 +1047,7 @@ new JsonNodeConvertOptions().allowYamlComments(true)
 可以开启：
 
 ```java
-new JsonNodeConvertOptions().allowSingleQuotes(true)
+JsonNodeConvertConfig.of().allowSingleQuotes(true)
 ```
 
 ### 支持尾随逗号吗？
@@ -1055,13 +1055,13 @@ new JsonNodeConvertOptions().allowSingleQuotes(true)
 可以开启：
 
 ```java
-new JsonNodeConvertOptions().allowTrailingComma(true)
+JsonNodeConvertConfig.of().allowTrailingComma(true)
 ```
 
 ### 如何限制 JSON 最大嵌套深度？
 
 ```java
-new JsonNodeConvertOptions().maxNestingDepth(200)
+JsonNodeConvertConfig.of().maxNestingDepth(200)
 ```
 
 ### `formatToNode` 会自动关闭我传入的 Reader 吗？

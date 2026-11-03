@@ -37,7 +37,8 @@ SCX Format XML 中最核心的概念包括：
 
 ```text
 XmlNodeConverter          XML 和 Node 之间的转换器
-XmlNodeConverterOptions   XML 转换选项
+XmlNodeConvertOptions     XML 转换选项接口
+XmlNodeConvertConfig      XML 可修改配置实现
 XmlElementConverter       XML 文本和 Element 之间的转换器
 ElementNodeConverter      Element 和 Node 之间的转换器
 Element                   XML 元素模型接口
@@ -127,7 +128,7 @@ XML 到 Node 映射问题   交给 ElementNodeConverter
 
 ```java
 import dev.scx.format.xml.XmlNodeConverter;
-import dev.scx.format.xml.XmlNodeConverterOptions;
+import dev.scx.format.xml.XmlNodeConvertConfig;
 import dev.scx.node.Node;
 
 var converter = new XmlNodeConverter();
@@ -139,7 +140,7 @@ Node node = converter.formatToNode(
         <age>18</age>
     </user>
     """,
-    new XmlNodeConverterOptions()
+    XmlNodeConvertConfig.of()
 );
 ```
 
@@ -148,7 +149,7 @@ Node node = converter.formatToNode(
 ```java
 String xml = converter.nodeToFormatString(
     node,
-    new XmlNodeConverterOptions().rootName("user")
+    XmlNodeConvertConfig.of().rootName("user")
 );
 ```
 
@@ -167,7 +168,7 @@ import static dev.scx.format.xml.XmlNodeConverter.DEFAULT_XML_NODE_CONVERTER;
 
 var node = DEFAULT_XML_NODE_CONVERTER.formatToNode(
     xml,
-    new XmlNodeConverterOptions()
+    XmlNodeConvertConfig.of()
 );
 ```
 
@@ -179,7 +180,7 @@ var converter = new XmlNodeConverter();
 
 ## XmlNodeConverter
 
-`XmlNodeConverter` 是 `FormatNodeConverter<XmlNodeConverterOptions>` 的实现。
+`XmlNodeConverter` 是 `FormatNodeConverter<XmlNodeConvertOptions>` 的实现。
 
 它把 XML 转 Node 的过程分成两步：
 
@@ -196,30 +197,30 @@ Node -> Element -> XML
 常见方法包括：
 
 ```java
-Node formatToNode(String text, XmlNodeConverterOptions options);
+Node formatToNode(String text, XmlNodeConvertOptions options);
 
-Node formatToNode(byte[] bytes, Charset charset, XmlNodeConverterOptions options);
+Node formatToNode(byte[] bytes, Charset charset, XmlNodeConvertOptions options);
 
-Node formatToNode(Reader reader, XmlNodeConverterOptions options)
+Node formatToNode(Reader reader, XmlNodeConvertOptions options)
         throws IOException;
 
-Node formatToNode(InputStream inputStream, Charset charset, XmlNodeConverterOptions options)
+Node formatToNode(InputStream inputStream, Charset charset, XmlNodeConvertOptions options)
         throws IOException;
 
-Node formatToNode(File file, Charset charset, XmlNodeConverterOptions options)
+Node formatToNode(File file, Charset charset, XmlNodeConvertOptions options)
         throws IOException;
 
-String nodeToFormatString(Node node, XmlNodeConverterOptions options);
+String nodeToFormatString(Node node, XmlNodeConvertOptions options);
 
-byte[] nodeToFormatBytes(Node node, Charset charset, XmlNodeConverterOptions options);
+byte[] nodeToFormatBytes(Node node, Charset charset, XmlNodeConvertOptions options);
 
-void nodeToFormat(Node node, Writer writer, XmlNodeConverterOptions options)
+void nodeToFormat(Node node, Writer writer, XmlNodeConvertOptions options)
         throws IOException;
 
-void nodeToFormat(Node node, OutputStream outputStream, Charset charset, XmlNodeConverterOptions options)
+void nodeToFormat(Node node, OutputStream outputStream, Charset charset, XmlNodeConvertOptions options)
         throws IOException;
 
-File nodeToFormatFile(Node node, File file, Charset charset, XmlNodeConverterOptions options)
+File nodeToFormatFile(Node node, File file, Charset charset, XmlNodeConvertOptions options)
         throws IOException;
 ```
 
@@ -245,7 +246,7 @@ var element = DEFAULT_XML_NODE_CONVERTER
             <age>18</age>
         </user>
         """,
-        new XmlNodeConverterOptions()
+        XmlNodeConvertConfig.of()
     );
 ```
 
@@ -256,7 +257,7 @@ String xml = DEFAULT_XML_NODE_CONVERTER
     .xmlElementConverter()
     .elementToFormatString(
         element,
-        new XmlNodeConverterOptions()
+        XmlNodeConvertConfig.of()
     );
 ```
 
@@ -344,9 +345,9 @@ public record Attribute(String name, String value) {
 
 属性值始终是字符串。
 
-## XmlNodeConverterOptions
+## XmlNodeConvertOptions 与 XmlNodeConvertConfig
 
-`XmlNodeConverterOptions` 是 XML 转换选项。
+`XmlNodeConvertOptions` 是 XML 转换选项接口；`XmlNodeConvertConfig` 是其可修改实现，应通过 `XmlNodeConvertConfig.of()` 创建并链式设置。
 
 默认值包括：
 
@@ -361,7 +362,7 @@ itemName          item
 可以链式配置：
 
 ```java
-var options = new XmlNodeConverterOptions()
+var options = XmlNodeConvertConfig.of()
     .rootName("user")
     .itemName("item")
     .maxNestingDepth(200)
@@ -384,7 +385,7 @@ root
 ```java
 String xml = converter.nodeToFormatString(
     node,
-    new XmlNodeConverterOptions().rootName("user")
+    XmlNodeConvertConfig.of().rootName("user")
 );
 ```
 
@@ -409,7 +410,7 @@ String xml = converter.nodeToFormatString(
 如果设置为：
 
 ```java
-new XmlNodeConverterOptions().rootName("data")
+XmlNodeConvertConfig.of().rootName("data")
 ```
 
 根标签就是：
@@ -443,7 +444,7 @@ array.add("c");
 
 String xml = converter.nodeToFormatString(
     array,
-    new XmlNodeConverterOptions()
+    XmlNodeConvertConfig.of()
 );
 ```
 
@@ -460,7 +461,7 @@ String xml = converter.nodeToFormatString(
 修改 `itemName`：
 
 ```java
-new XmlNodeConverterOptions().itemName("value")
+XmlNodeConvertConfig.of().itemName("value")
 ```
 
 输出大致为：
@@ -488,7 +489,7 @@ new XmlNodeConverterOptions().itemName("value")
 示例：
 
 ```java
-var options = new XmlNodeConverterOptions()
+var options = XmlNodeConvertConfig.of()
     .maxNestingDepth(100);
 ```
 
@@ -525,7 +526,7 @@ var options = new XmlNodeConverterOptions()
 示例：
 
 ```java
-var options = new XmlNodeConverterOptions()
+var options = XmlNodeConvertConfig.of()
     .maxChildCount(1000);
 ```
 
@@ -551,7 +552,7 @@ var options = new XmlNodeConverterOptions()
 示例：
 
 ```java
-var options = new XmlNodeConverterOptions()
+var options = XmlNodeConvertConfig.of()
     .maxStringLength(1_000_000);
 ```
 
@@ -1010,7 +1011,7 @@ var node = new ObjectNode();
 
 node.put("", "123");
 
-converter.nodeToFormatString(node, new XmlNodeConverterOptions());
+converter.nodeToFormatString(node, XmlNodeConvertConfig.of());
 ```
 
 会抛出异常。
@@ -1210,7 +1211,7 @@ var element = DEFAULT_XML_NODE_CONVERTER
             <name>Tom</name>
         </user>
         """,
-        new XmlNodeConverterOptions()
+        XmlNodeConvertConfig.of()
     );
 ```
 
@@ -1221,7 +1222,7 @@ String xml = DEFAULT_XML_NODE_CONVERTER
     .xmlElementConverter()
     .elementToFormatString(
         element,
-        new XmlNodeConverterOptions()
+        XmlNodeConvertConfig.of()
     );
 ```
 
@@ -1234,7 +1235,7 @@ String xml = DEFAULT_XML_NODE_CONVERTER
 如果你已经有 `Element`，可以单独转换为 `Node`。
 
 ```java
-var options = new XmlNodeConverterOptions();
+var options = XmlNodeConvertConfig.of();
 
 var node = new ElementNodeConverter(options)
     .elementToNode(element);
@@ -1257,7 +1258,7 @@ var element = new ElementNodeConverter(options)
 try (var reader = new FileReader(file, StandardCharsets.UTF_8)) {
     Node node = converter.formatToNode(
         reader,
-        new XmlNodeConverterOptions()
+        XmlNodeConvertConfig.of()
     );
 }
 ```
@@ -1269,7 +1270,7 @@ try (var inputStream = new FileInputStream(file)) {
     Node node = converter.formatToNode(
         inputStream,
         StandardCharsets.UTF_8,
-        new XmlNodeConverterOptions()
+        XmlNodeConvertConfig.of()
     );
 }
 ```
@@ -1280,7 +1281,7 @@ try (var inputStream = new FileInputStream(file)) {
 Node node = converter.formatToNode(
     file,
     StandardCharsets.UTF_8,
-    new XmlNodeConverterOptions()
+    XmlNodeConvertConfig.of()
 );
 ```
 
@@ -1293,7 +1294,7 @@ try (var writer = new FileWriter(file, StandardCharsets.UTF_8)) {
     converter.nodeToFormat(
         node,
         writer,
-        new XmlNodeConverterOptions().rootName("data")
+        XmlNodeConvertConfig.of().rootName("data")
     );
 }
 ```
@@ -1306,7 +1307,7 @@ try (var outputStream = new FileOutputStream(file)) {
         node,
         outputStream,
         StandardCharsets.UTF_8,
-        new XmlNodeConverterOptions().rootName("data")
+        XmlNodeConvertConfig.of().rootName("data")
     );
 }
 ```
@@ -1318,7 +1319,7 @@ converter.nodeToFormatFile(
     node,
     file,
     StandardCharsets.UTF_8,
-    new XmlNodeConverterOptions().rootName("data")
+    XmlNodeConvertConfig.of().rootName("data")
 );
 ```
 
@@ -1350,7 +1351,7 @@ try {
 
 ```java
 import dev.scx.format.xml.XmlNodeConverter;
-import dev.scx.format.xml.XmlNodeConverterOptions;
+import dev.scx.format.xml.XmlNodeConvertConfig;
 import dev.scx.node.ArrayNode;
 import dev.scx.node.ObjectNode;
 
@@ -1375,7 +1376,7 @@ public class XmlFormatDemo {
 
         user.put("tag", tags);
 
-        var options = new XmlNodeConverterOptions()
+        var options = XmlNodeConvertConfig.of()
             .rootName("user")
             .itemName("item");
 
@@ -1383,7 +1384,7 @@ public class XmlFormatDemo {
 
         System.out.println(xml);
 
-        var node2 = converter.formatToNode(xml, new XmlNodeConverterOptions());
+        var node2 = converter.formatToNode(xml, XmlNodeConvertConfig.of());
 
         System.out.println(node2);
     }
@@ -1650,7 +1651,7 @@ null
 可以。
 
 ```java
-new XmlNodeConverterOptions().rootName("user")
+XmlNodeConvertConfig.of().rootName("user")
 ```
 
 ### 可以修改数组元素标签名吗？
@@ -1658,7 +1659,7 @@ new XmlNodeConverterOptions().rootName("user")
 可以。
 
 ```java
-new XmlNodeConverterOptions().itemName("value")
+XmlNodeConvertConfig.of().itemName("value")
 ```
 
 ### 空对象能保留吗？
