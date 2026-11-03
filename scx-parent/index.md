@@ -786,7 +786,7 @@ mvn clean package
         <dependency>
             <groupId>dev.scx</groupId>
             <artifactId>scx-node</artifactId>
-            <version>0.10.0</version>
+            <version>0.10.1</version>
         </dependency>
     </dependencies>
 
