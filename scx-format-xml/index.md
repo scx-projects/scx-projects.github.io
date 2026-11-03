@@ -18,7 +18,7 @@ SCX Format XML 是 `scx-format` 的 XML 实现模块。
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-format-xml</artifactId>
-    <version>0.10.0</version>
+    <version>0.10.1</version>
 </dependency>
 ```
 
