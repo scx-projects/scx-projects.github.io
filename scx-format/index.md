@@ -469,7 +469,7 @@ public interface FormatNodeConvertOptions {
 
 ```text
 JsonNodeConvertOptions implements FormatNodeConvertOptions
-XmlNodeConvertOptions  implements FormatNodeConvertOptions
+XmlNodeConvertOptions implements FormatNodeConvertOptions
 ```
 
 JSON 和 XML 的配置项完全不同，因此不能放在核心接口中。
