@@ -2262,9 +2262,19 @@ public interface ByteIndexer {
 
 ```text
 NoMatch        完全未匹配
-PartialMatch   部分匹配，可能跨 chunk 完成；matchedLength 表示当前部分匹配长度
+PartialMatch   部分匹配，可能跨 chunk 完成
 FullMatch      完全匹配
 ```
+
+当结果是 `PartialMatch` 时，会包含：
+
+```text
+matchedLength   当前部分匹配长度
+```
+
+这表示当前数据末尾只匹配到了模式的一部分，还没有找到完整模式。
+
+匹配器会保留这部分状态，在后续 chunk 中继续匹配。
 
 当结果是 `FullMatch` 时，会包含：
 
