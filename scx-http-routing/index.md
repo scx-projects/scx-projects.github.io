@@ -16,7 +16,7 @@ SCX HTTP Routing 是一个 HTTP 路由匹配库。
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-http-routing</artifactId>
-    <version>0.10.0</version>
+    <version>0.10.1</version>
 </dependency>
 ```
 

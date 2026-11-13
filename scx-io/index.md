@@ -16,7 +16,7 @@ SCX IO 本身不是文件系统库，也不是 NIO 框架。它的重点是把�
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-io</artifactId>
-    <version>0.10.0</version>
+    <version>0.10.2</version>
 </dependency>
 ```
 
@@ -2241,30 +2241,42 @@ var chunk = consumer.byteChunk();
 ```java
 public interface ByteIndexer {
 
-    StatusByteMatchResult indexOf(ByteChunk chunk);
+    ByteIndexerMatchResult indexOf(ByteChunk chunk);
 
-    boolean isEmptyPattern();
+    int patternLength();
 
     void reset();
 
 }
 ```
 
+`patternLength()` 返回固定模式串的长度；空模式串返回 `0`，无法静态确定长度的可变模式返回 `-1`。`LineBreakByteIndexer` 返回 `-1`。
+
 `ByteIndexer` 通常不会直接暴露给最终业务代码，而是被 `ByteInput#indexOf(...)`、`readUntil(...)`、`BoundaryByteSupplier` 等使用。
 
-## StatusByteMatchResult
+## ByteIndexerMatchResult
 
-`ByteIndexer#indexOf(...)` 返回 `StatusByteMatchResult`。
+`ByteIndexer#indexOf(...)` 返回密封接口 `ByteIndexerMatchResult`。
 
-状态有三种：
+结果有三种类型：
 
 ```text
-NO_MATCH        完全未匹配
-PARTIAL_MATCH   部分匹配，可能跨 chunk 完成
-FULL_MATCH      完全匹配
+NoMatch        完全未匹配
+PartialMatch   部分匹配，可能跨 chunk 完成
+FullMatch      完全匹配
 ```
 
-当状态是 `FULL_MATCH` 时，会包含：
+当结果是 `PartialMatch` 时，会包含：
+
+```text
+matchedLength   当前部分匹配长度
+```
+
+这表示当前数据末尾只匹配到了模式的一部分，还没有找到完整模式。
+
+匹配器会保留这部分状态，在后续 chunk 中继续匹配。
+
+当结果是 `FullMatch` 时，会包含：
 
 ```text
 index           相对于当前 chunk 的匹配位置

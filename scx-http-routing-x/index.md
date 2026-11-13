@@ -16,7 +16,7 @@ SCX HTTP Routing X 本身不是 HTTP Server，也不是路由核心。HTTP 请�
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-http-routing-x</artifactId>
-    <version>0.10.0</version>
+    <version>0.10.1</version>
 </dependency>
 ```
 

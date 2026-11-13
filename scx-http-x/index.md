@@ -14,7 +14,7 @@ SCX HTTP X 是 `scx-http` 的具体实现库。
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-http-x</artifactId>
-    <version>0.10.0</version>
+    <version>0.10.1</version>
 </dependency>
 ```
 
