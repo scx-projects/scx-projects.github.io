@@ -16,7 +16,7 @@ SCX HTTP 本身不负责创建 TCP 连接，也不直接启动 HTTP 服务；它
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-http</artifactId>
-    <version>0.10.0</version>
+    <version>0.10.1</version>
 </dependency>
 ```
 

@@ -18,7 +18,7 @@ SCX WebSocket 是一个 WebSocket 协议处理库。
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-websocket</artifactId>
-    <version>0.10.0</version>
+    <version>0.10.1</version>
 </dependency>
 ```
 

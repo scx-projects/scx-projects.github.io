@@ -28,7 +28,7 @@ SCX WebSocket X 是 `scx-websocket` 和 `scx-http-x` 之间的集成库。
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-websocket-x</artifactId>
-    <version>0.10.0</version>
+    <version>0.10.1</version>
 </dependency>
 ```
 
