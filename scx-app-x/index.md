@@ -16,7 +16,7 @@ SCX App X 提供一组基于 `ScxAppModule` 的开箱即用应用模块，可以
 <dependency>
     <groupId>dev.scx</groupId>
     <artifactId>scx-app-x</artifactId>
-    <version>0.7.2</version>
+    <version>0.10.1</version>
 </dependency>
 ```
 
